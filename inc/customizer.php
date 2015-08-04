@@ -11,7 +11,7 @@
  */
 
 /**
- * Replace With Theme Name Theme Customizer
+ * Midwest Inland Port 2015 Theme Customizer
  *
  * Contains methods for customizing the theme customization screen.
  *
@@ -40,7 +40,7 @@ class mip_2015_Customize {
 		$wp_customize->add_panel( 'theme_options',
 			array(
 				'capability'  		=> 'edit_theme_options',
-				'description'  		=> esc_html__( 'Options for Replace With Theme Name', 'mip-2015' ),
+				'description'  		=> esc_html__( 'Options for Midwest Inland Port 2015', 'mip-2015' ),
 				'priority'  		=> 10,
 				'theme_supports'  	=> '',
 				'title'  			=> esc_html__( 'Theme Options', 'mip-2015' ),
