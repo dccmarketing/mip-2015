@@ -4,7 +4,7 @@
  *
  * @link https://codex.wordpress.org/Functions_File_Explained
  *
- * @package DocBlock
+ * @package Midwest Inland Port 2015
  */
 
 if ( ! function_exists( 'mip_2015_setup' ) ) :

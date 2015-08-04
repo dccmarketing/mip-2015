@@ -4,7 +4,7 @@
  *
  * @link https://codex.wordpress.org/Template_Hierarchy
  *
- * @package DocBlock
+ * @package Midwest Inland Port 2015
  */
 
 get_header(); ?>

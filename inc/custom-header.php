@@ -13,7 +13,7 @@
  *
  * @link https://codex.wordpress.org/Custom_Headers
  *
- * @package DocBlock
+ * @package Midwest Inland Port 2015
  */
 
 /**

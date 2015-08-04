@@ -3,7 +3,7 @@
 /**
  * A class of helpful menu-related functions
  *
- * @package DocBlock
+ * @package Midwest Inland Port 2015
  * @author Slushman <chris@slushman.com>
  */
 class mip_2015_Menukit {

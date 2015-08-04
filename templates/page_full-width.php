@@ -4,7 +4,7 @@
  *
  * Description: A full-width template with no sidebar
  *
- * @package DocBlock
+ * @package Midwest Inland Port 2015
  */
 
 get_header();

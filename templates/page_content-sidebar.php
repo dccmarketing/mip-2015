@@ -4,7 +4,7 @@
  *
  * Description: Page template with sidebar on the right-side
  *
- * @package DocBlock
+ * @package Midwest Inland Port 2015
  */
 
 get_header();

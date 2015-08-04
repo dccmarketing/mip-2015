@@ -3,7 +3,7 @@
 /**
  * A class of helpful theme functions
  *
- * @package DocBlock
+ * @package Midwest Inland Port 2015
  * @author Slushman <chris@slushman.com>
  */
 class mip_2015_Themekit {
