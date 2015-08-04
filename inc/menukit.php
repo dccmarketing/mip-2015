@@ -6,7 +6,7 @@
  * @package DocBlock
  * @author Slushman <chris@slushman.com>
  */
-class function_names_Menukit {
+class mip_2015_Menukit {
 
 	/**
 	 * Constructor
@@ -288,5 +288,5 @@ class function_names_Menukit {
 /**
  * Make an instance so its ready to be used
  */
-$function_names_menukit = new function_names_Menukit();
+$mip_2015_menukit = new mip_2015_Menukit();
 

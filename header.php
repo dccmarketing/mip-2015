@@ -59,7 +59,7 @@ do_action( 'after_body' );
 			<div class="breadcrumbs">
 				<div class="wrap-crumbs"><?php
 
-					do_action( 'function_names_breadcrumbs' );
+					do_action( 'mip_2015_breadcrumbs' );
 
 				?></div><!-- .wrap-crumbs -->
 			</div><!-- .breadcrumbs -->
