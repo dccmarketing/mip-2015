@@ -14,12 +14,15 @@ $size__login-logo-height: 84px;
 /**
  * Breakpoints
  */
-$bp__menu-button		: 600px; // 37.5em
+$bp__menu-button		: 767px; // 37.5em
 $bp__headings1 			: 700px; // 43.75em
 $bp__tablet				: 768px; // 48em
+$bp__menu-font 			: 855px;
 $bp__headings2 			: 900px; // 56.25em
 $bp__footer 			: 955px;
 $bp__laptop				: 1024px; // 64em
+$bp__full-menu 			: 1140px;
+$bp__full 				: 1200px;
 
 
 $miptrans 				: 0.4s ease;

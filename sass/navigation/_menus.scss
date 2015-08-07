@@ -19,6 +19,7 @@
 			background	: $color__bg-menu-item-mobile;
 
 			@media only screen and (min-width: $bp__menu-button+1) {
+				display: none;
 				box-shadow	: 0 3px 3px rgba(0, 0, 0, 0.2);
 				position	: absolute;
 				z-index		: 99999;
@@ -77,14 +78,6 @@
 		&:hover,
 		&.focus {
 
-			> ul {
-				@media only screen and (min-width: $bp__menu-button+1) {
-					display 	: block;
-					visibility 	: visible;
-					opacity 	: 1;
-				}
-			}
-
 			> a {
 				background: $color__bg-menu-item-mobile;
 				color: $color__text-menu-mobile-hover;
@@ -98,13 +91,25 @@
 	}
 
 	a {
-		padding 		: 0.5em 1em;
-		display			: block;
-		text-decoration	: none;
 		color 			: $color__text-menu-mobile;
+		display			: block;
+		padding 		: 0.5em 1em;
+		text-decoration	: none;
 
 		@media only screen and (min-width: $bp__menu-button+1) {
 			color: $color__text-menu;
+		}
+
+		@media only screen and (min-width: $bp__menu-font) {
+			font-size: 18px;
+		}
+
+		@media only screen and (min-width: $bp__footer) {
+			font-size: 20px;
+		}
+
+		@media only screen and (min-width: $bp__full-menu) {
+			font-size: 24px;
 		}
 
 		&:focus {
