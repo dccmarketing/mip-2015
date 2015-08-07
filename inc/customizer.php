@@ -28,6 +28,15 @@ class mip_2015_Customize {
 	* Note: To enable instant preview, we have to actually write a bit of custom
 	* javascript. See live_preview() for more.
 	*
+	* Existing sections:
+	*
+	* title_tagline - Site Title & Tagline
+	* colors - Colors
+	* header_image - Header Image
+	* background_image - Background Image
+	* nav - Navigation
+	* static_front_page - Static Front Page
+	*
 	* @access 		public
 	* @see 			add_action( 'customize_register', $func )
 	* @param 		WP_Customize_Manager 		$wp_customize 		Theme Customizer object.
@@ -47,30 +56,161 @@ class mip_2015_Customize {
 			)
 		);
 
-
-		/**
-		 * Existing sections:
-		 *
-		 * title_tagline - Site Title & Tagline
-		 * colors - Colors
-		 * header_image - Header Image
-		 * background_image - Background Image
-		 * nav - Navigation
-		 * static_front_page - Static Front Page
-		 */
-		// New Section
-		$wp_customize->add_section( 'new_section',
+		// Header Options
+		$wp_customize->add_section( 'header_options',
 			array(
 				'capability' 	=> 'edit_theme_options',
-				'description' 	=> esc_html__( 'New Customizer Section', 'mip-2015' ),
+				'description' 	=> esc_html__( 'Options for the site header', 'mip-2015' ),
 				'panel' 		=> 'theme_options',
 				'priority' 		=> 10,
-				'title' 		=> esc_html__( 'New Section', 'mip-2015' )
+				'title' 		=> esc_html__( 'Header Options', 'mip-2015' )
+			)
+		);
+
+		// Footer Options
+		$wp_customize->add_section( 'footer_options',
+			array(
+				'capability' 	=> 'edit_theme_options',
+				'description' 	=> esc_html__( 'Options for the site footer', 'mip-2015' ),
+				'panel' 		=> 'theme_options',
+				'priority' 		=> 10,
+				'title' 		=> esc_html__( 'Footer Options', 'mip-2015' )
 			)
 		);
 
 
 
+		// Footer Text Field
+		$wp_customize->add_setting(
+			'footer_text',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'footer_text',
+			array(
+				'description' 	=> esc_html__( '', 'mip-2015' ),
+				'label' => esc_html__( 'Footer Text', 'mip-2015' ),
+				'section' => 'footer_options',
+				'settings' => 'footer_text',
+				'type' => 'textarea'
+			)
+		);
+		$wp_customize->get_setting( 'footer_text' )->transport = 'postMessage';
+
+		// Footer Owner Field
+		$wp_customize->add_setting(
+			'footer_owner',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'footer_owner',
+			array(
+				'description' 	=> esc_html__( 'The text in the footer used in the copyright notice.', 'mip-2015' ),
+				'label' => esc_html__( 'Footer Owner Text', 'mip-2015' ),
+				'section' => 'footer_options',
+				'settings' => 'footer_owner',
+				'type' => 'text'
+			)
+		);
+		$wp_customize->get_setting( 'footer_owner' )->transport = 'postMessage';
+
+		// Footer Address Field
+		$wp_customize->add_setting(
+			'footer_address',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'footer_address',
+			array(
+				'description' 	=> esc_html__( 'The address in the site footer.', 'mip-2015' ),
+				'label' => esc_html__( 'Footer Address', 'mip-2015' ),
+				'section' => 'footer_options',
+				'settings' => 'footer_address',
+				'type' => 'text'
+			)
+		);
+		$wp_customize->get_setting( 'footer_address' )->transport = 'postMessage';
+
+		// Footer Phone Number Field
+		$wp_customize->add_setting(
+			'footer_phone',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'footer_phone',
+			array(
+				'description' 	=> esc_html__( 'The phone number in the site footer.', 'mip-2015' ),
+				'label' => esc_html__( 'Footer Phone Number', 'mip-2015' ),
+				'section' => 'footer_options',
+				'settings' => 'footer_phone',
+				'type' => 'text'
+			)
+		);
+		$wp_customize->get_setting( 'footer_phone' )->transport = 'postMessage';
+
+
+
+
+
+		// Site Logo Field
+		$wp_customize->add_setting(
+			'site_logo',
+			array(
+				'default' => '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			new WP_Customize_Image_Control(
+				$wp_customize,
+				'site_logo',
+				array(
+					'description' 	=> esc_html__( '', 'mip-2015' ),
+					'label' => esc_html__( 'Site Logo', 'mip-2015' ),
+					'section' => 'header_options',
+					'settings' => 'site_logo'
+				)
+			)
+		);
+		$wp_customize->get_setting( 'site_logo' )->transport = 'postMessage';
+
+		// Default Header Image Field
+		$wp_customize->add_setting(
+			'default_header',
+			array(
+				'default' => '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			new WP_Customize_Image_Control(
+				$wp_customize,
+				'default_header',
+				array(
+					'description' 	=> esc_html__( 'This image is used if no header image is chosen on any particular page.', 'mip-2015' ),
+					'label' => esc_html__( 'Default Header Image', 'mip-2015' ),
+					'section' => 'header_options',
+					'settings' => 'default_header'
+				)
+			)
+		);
+		$wp_customize->get_setting( 'default_header' )->transport = 'postMessage';
+
+
+
+/*
 		// Add Fields & Controls
 
 		// Text Field
@@ -91,6 +231,7 @@ class mip_2015_Customize {
 				'type' 		=> 'text'
 			)
 		);
+		$wp_customize->get_setting( 'text_field' )->transport = 'postMessage';
 
 
 
@@ -112,6 +253,7 @@ class mip_2015_Customize {
 				'type' => 'url'
 			)
 		);
+		$wp_customize->get_setting( 'url_field' )->transport = 'postMessage';
 
 
 
@@ -133,6 +275,7 @@ class mip_2015_Customize {
 				'type' => 'email'
 			)
 		);
+		$wp_customize->get_setting( 'email_field' )->transport = 'postMessage';
 
 		// Date Field
 		$wp_customize->add_setting(
@@ -152,6 +295,7 @@ class mip_2015_Customize {
 				'type' => 'date'
 			)
 		);
+		$wp_customize->get_setting( 'date_field' )->transport = 'postMessage';
 
 
 		// Checkbox Field
@@ -172,9 +316,10 @@ class mip_2015_Customize {
 				'type' => 'checkbox'
 			)
 		);
+		$wp_customize->get_setting( 'checkbox_field' )->transport = 'postMessage';
 
 
-/*
+
 
 		// Password Field
 		$wp_customize->add_setting(
@@ -194,27 +339,7 @@ class mip_2015_Customize {
 				'type' => 'password'
 			)
 		);
-
-
-
-		// Checkbox Field
-		$wp_customize->add_setting(
-			'checkbox_field',
-			array(
-				'default'  	=> 'true',
-				'transport' => 'postMessage'
-			)
-		);
-		$wp_customize->add_control(
-			'checkbox_field',
-			array(
-				'description' 	=> esc_html__( '', 'mip-2015' ),
-				'label' => esc_html__( 'Checkbox Field', 'mip-2015' ),
-				'section' => 'new_section',
-				'settings' => 'checkbox_field',
-				'type' => 'checkbox'
-			)
-		);
+		$wp_customize->get_setting( 'password_field' )->transport = 'postMessage';
 
 
 
@@ -241,6 +366,7 @@ class mip_2015_Customize {
 				'type' => 'radio'
 			)
 		);
+		$wp_customize->get_setting( 'radio_field' )->transport = 'postMessage';
 
 
 
@@ -267,6 +393,7 @@ class mip_2015_Customize {
 				'type' => 'select'
 			)
 		);
+		$wp_customize->get_setting( 'select_field' )->transport = 'postMessage';
 
 
 
@@ -288,6 +415,7 @@ class mip_2015_Customize {
 				'type' => 'textarea'
 			)
 		);
+		$wp_customize->get_setting( 'textarea_field' )->transport = 'postMessage';
 
 
 
@@ -316,6 +444,7 @@ class mip_2015_Customize {
 				'type' => 'range'
 			)
 		);
+		$wp_customize->get_setting( 'range_field' )->transport = 'postMessage';
 
 
 
@@ -337,6 +466,7 @@ class mip_2015_Customize {
 				'type' => 'dropdown-pages'
 			)
 		);
+		$wp_customize->get_setting( 'dropdown-pages' )->transport = 'postMessage';
 
 
 
@@ -360,6 +490,7 @@ class mip_2015_Customize {
 				),
 			)
 		);
+		$wp_customize->get_setting( 'color_field' )->transport = 'postMessage';
 
 
 
@@ -400,18 +531,14 @@ class mip_2015_Customize {
 				)
 			)
 		);
-		*/
+		$wp_customize->get_setting( 'image_upload' )->transport = 'postMessage';
 
+		*/
 
 		// Enable live preview JS
 		$wp_customize->get_setting( 'blogname' )->transport 		= 'postMessage';
 		$wp_customize->get_setting( 'blogdescription' )->transport 	= 'postMessage';
 		$wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage';
-		$wp_customize->get_setting( 'text_field' )->transport 		= 'postMessage';
-		$wp_customize->get_setting( 'url_field' )->transport 		= 'postMessage';
-		$wp_customize->get_setting( 'email_field' )->transport 		= 'postMessage';
-		$wp_customize->get_setting( 'date_field' )->transport 		= 'postMessage';
-		$wp_customize->get_setting( 'checkbox_field' )->transport 	= 'postMessage';
 
 	} // register()
 

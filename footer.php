@@ -9,14 +9,20 @@
  * @package Midwest Inland Port 2015
  */
 
+global $mip_2015_themekit;
+
 		?></div><!-- .wrap -->
 	</div><!-- #content -->
 
 	<footer id="colophon" class="site-footer" role="contentinfo">
 		<div class="wrap wrap-footer">
+			<div class="text-footer"><?php echo get_theme_mod( 'footer_text' ); ?></div>
 			<div class="site-info">
-				<div class="copyright">&copy <?php echo date( 'Y' ); ?> <a href="<?php echo esc_url( get_admin_url(), 'mip-2015' ); ?>"><?php echo get_bloginfo( 'name' ); ?></a></div>
-				<div class="credits"><?php printf( esc_html__( 'Site created by %1$s', 'mip-2015' ), '<a href="https://dccmarketing.com/" target="_blank">DCC Marketing</a>' ); ?></div>
+				<ul>
+					<li class="copyright">&copy <?php echo date( 'Y' ); ?> <a href="<?php echo esc_url( get_admin_url(), 'mip-2015' ); ?>"><?php echo get_theme_mod( 'footer_owner' ); ?></a></li>
+					<li class="address"><address><?php echo get_theme_mod( 'footer_address' ); ?></address></li>
+					<li class="phone"><a href="tel:<?php echo $mip_2015_themekit->make_number( get_theme_mod( 'footer_phone' ) ); ?>"><?php echo get_theme_mod( 'footer_phone' ); ?></a></li>
+				</ul>
 			</div><!-- .site-info -->
 		</div><!-- .wrap-footer -->
 	</footer><!-- #colophon -->

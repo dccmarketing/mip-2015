@@ -9,6 +9,8 @@
  * @package Midwest Inland Port 2015
  */
 
+global $mip_2015_themekit;
+
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
@@ -34,24 +36,26 @@ do_action( 'after_body' );
 
 			if ( is_front_page() && is_home() ) {
 
-				?><h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1><?php
+				?><h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo esc_url( get_theme_mod( 'site_logo' ) ); ?>" class="site-logo" /></a></h1><?php
 
 			} else {
 
-				?><p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p><?php
+				?><p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo esc_url( get_theme_mod( 'site_logo' ) ); ?>" class="site-logo" /></a></p><?php
 
 			}
 
-				?><p class="site-description"><?php bloginfo( 'description' ); ?></p>
-			</div><!-- .site-branding -->
+			?></div><!-- .site-branding --><?php
 
-			<nav id="site-navigation" class="main-navigation" role="navigation">
-				<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Menu', 'mip-2015' ); ?></button><?php
+		get_template_part( 'menus/menu', 'social' );
 
-					wp_nav_menu( array( 'theme_location' => 'primary', 'menu_id' => 'primary-menu' ) );
-
-			?></nav><!-- #site-navigation -->
+		?>
 		</div><!-- .header_wrap -->
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Menu', 'mip-2015' ); ?></button><?php
+
+				wp_nav_menu( array( 'theme_location' => 'primary', 'menu_id' => 'primary-menu' ) );
+
+		?></nav><!-- #site-navigation -->
 	</header><!-- #masthead -->
 
 	<div id="content" class="site-content">

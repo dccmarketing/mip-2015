@@ -1,0 +1,49 @@
+.mip-search {
+	background-color: $ltgray;
+	display 		: block;
+	height 			: 180px;
+	padding 		: 3em 0;
+	transform 		: translateY(-100%);
+	transition 		: $miptrans;
+
+	&.open {
+		transform: translateY(0);
+	}
+
+	.search-form {
+		margin 		: 0 auto;
+		position 	: relative;
+		text-align 	: center;
+	}
+
+	.search-field {
+		background-color: $light;
+		border-radius 	: 0;
+		color 			: $gray;
+		float 			: left;
+		font-size 		: 20px;
+		height 			: 38px;
+		padding 		: 0.5em;
+		width 			: calc( 100% - 80px );
+	}
+
+	.search-submit {
+		border-radius 	: 0;
+		box-shadow 		: none;
+		float 			: left;
+		height 			: 60px;
+		text-shadow 	: none;
+		transition 		: $miptrans;
+
+		&:hover {
+			background-color: $gray;
+		}
+
+		.dashicons-search {
+			font-size 	: 30px;
+			height 		: 100%;
+			line-height : 1.5;
+			width 		: 100%;
+		}
+	}
+}

@@ -31,7 +31,7 @@ class mip_2015_Menukit {
 		add_shortcode( 'listmenu', array( $this, 'list_menu' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'add_menu_title_as_class' ), 10, 1 );
 
-	} // laoder()
+	} // loader()
 
 	/**
 	 * Adds the Menu Item Title as a class on the menu item
@@ -40,7 +40,13 @@ class mip_2015_Menukit {
 	 */
 	public function add_menu_title_as_class( $menu_item ) {
 
-		$menu_item->classes[] = sanitize_title( $menu_item->title );
+		$title = sanitize_title( trim( $menu_item->title ) );
+
+		if ( ! in_array( $title, $menu_item->classes ) ) {
+
+			$menu_item->classes[] = $title;
+
+		}
 
 		return $menu_item;
 
@@ -214,18 +220,19 @@ class mip_2015_Menukit {
 	 *
 	 * @global 		 			$dcc_2015_themekit 			Themekit class
 	 * @param 		array 		$classes 			Array of classes to check
-	 * @param 		string 		$link 				Optional to add to the SVG
 	 * @return 		mixed 							SVG icon
 	 */
-	public function get_svg_by_class( $classes, $link = '' ) {
+	public function get_svg_by_class( $classes ) {
 
-		global $dcc_2015_themekit;
+		global $mip_2015_themekit;
 
 		$output = '';
 
 		foreach ( $classes as $class ) {
 
-			$check = $dcc_2015_themekit->get_svg( $class, $link );
+			if ( empty( $class ) ) { continue; }
+
+			$check = $mip_2015_themekit->get_svg( $class );
 
 			if ( ! is_null( $check ) ) { $output .= $check; break; }
 

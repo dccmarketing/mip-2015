@@ -28,7 +28,7 @@
 
 			/* translators: %s: Name of current post */
 			the_content( sprintf(
-				wp_kses( esc_html__( 'Continue reading %s <span class="meta-nav">&rarr;</span>', 'mip-2015' ), array( 'span' => array( 'class' => array() ) ) ),
+				wp_kses( __( 'Continue reading %s <span class="meta-nav">&rarr;</span>', 'mip-2015' ), array( 'span' => array( 'class' => array() ) ) ),
 				the_title( '<span class="screen-reader-text">"', '"</span>', false )
 			) );
 

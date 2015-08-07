@@ -1,17 +1,64 @@
 .site-footer {
-	width 		: 100%;
-	float 		: left;
-}
+	background-color: $gray;
+	color 			: $light;
+	float 			: left;
+	width 			: 100%;
 
-.wrap-footer {
-	overflow 	: auto;
-	padding 	: 1em;
+	@media only screen and (min-width: $bp__footer) {
+		font-size 	: 20px;
+	}
 
+	a {
+		color 			: $light;
+		text-decoration : none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	.wrap {
+		max-width 	: 75%;
+		overflow 	: auto;
+		padding 	: 1em;
+
+		@media only screen and (min-width: $bp__footer) {
+			max-width 	: 1155px;
+		}
+	}
 }
 
 .site-info {
-	text-align: center;
+	padding 	: 1em;
+	text-align 	: center;
 	width 		: 100%;
-	float 		: left;
-	overflow 	: auto;
+
+	@media only screen and (min-width: $bp__footer) {
+		font-size 	: 18px;
+	}
+
+	ul {
+		list-style 		: none;
+		margin-bottom 	: 0;
+
+		li {
+
+			@media only screen and (min-width: $bp__footer) {
+				border-right 	: 2px solid $light;
+				display 		: inline-block;
+				padding 		: 0 1em 0 0.75em;
+
+				&:last-child {
+					border-right 	: none;
+					padding-right 	: 0;
+				}
+			}
+		}
+	}
+}
+
+.text-footer {
+	@media only screen and (max-width: $bp__footer) {
+		text-align: center;
+	}
 }
