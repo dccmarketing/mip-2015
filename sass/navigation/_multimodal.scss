@@ -1,0 +1,106 @@
+.nav-multimodal {
+	background-color: $gray;
+
+	.menu-items {
+		@extend %listreset;
+		margin 		: 0 auto;
+		max-width 	: 850px;
+		padding 	: 0 1em;
+		text-align 	: center;
+	}
+
+	.menu-item {
+		display 		: inline-block;
+		line-height 	: 1.5;
+		padding 		: 20px 0;
+		perspective 	: 800px;
+		position 		: relative;
+		vertical-align 	: top;
+		width 			: 32%;
+
+		@media only screen and (min-width: $bp__multimodal1) {
+			width 		: 19%;
+		}
+
+		svg {
+			fill 	: $light;
+			height 	: $font__size-multimodal;
+			width 	: $font__size-multimodal;
+		}
+
+		@media only screen and (min-width: $bp__laptop) {
+			height 	: 100px;
+
+			&:hover {
+
+				.coin {
+					transform 	: rotate3d( 0, 1, 0, -180deg ) translateY(-50%);
+				}
+
+				.front > svg {
+					opacity: 0;
+				}
+
+				.back > .text {
+					opacity: 1;
+				}
+			}
+		}
+	}
+
+	a {
+		color 			: $light;
+		display 		: block;
+		position 		: relative;
+		text-decoration : none;
+		transform-style : preserve-3d;
+		transition 		: 0.4s ease;
+
+		@media only screen and (min-width: $bp__laptop) {
+			height 			: $font__size-multimodal;
+			top 			: 50%;
+			transform 		: translateY(-50%);
+
+			> div {
+				height 				: 100%;
+				position 			: absolute;
+				width 				: 100%;
+			}
+		}
+	}
+
+	.front {
+		z-index: 2;
+
+		@media only screen and (min-width: $bp__laptop) {
+			svg {
+				opacity 	: 1;
+				transition 	: 0.4s ease;
+			}
+		}
+	}
+
+	.back {
+
+		@media only screen and (min-width: $bp__laptop) {
+			transform: rotate3d( 0, 1, 0, 180deg);
+		}
+
+		.text {
+			display 	: block;
+			margin 		: 0 auto;
+			position 	: relative;
+			transition 	: 0.4s ease;
+
+			@media only screen and (min-width: $bp__multimodal) {
+				font-size 	: 24px;
+			}
+
+			@media only screen and (min-width: $bp__laptop) {
+				opacity 	: 0;
+				top 		: 50%;
+				transform 	: translateY(-50%);
+			}
+		}
+	}
+}

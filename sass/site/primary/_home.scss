@@ -1,3 +1,17 @@
 .home {
 
 }
+
+
+.tp-bullets.simplebullets.round {
+
+	.bullet {
+		background 		: $ltgray;
+		border 			: 2px solid $light;
+		border-radius 	: 50%;
+
+		&.selected {
+			background 		: $green;
+		}
+	}
+}

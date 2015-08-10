@@ -41,6 +41,8 @@ class mip_2015_Themekit {
 		add_action( 'mip_2015_breadcrumbs', array( $this, 'breadcrumbs' ) );
 		add_action( 'after_body', array( $this, 'add_hidden_search' ) );
 		add_filter( 'get_search_form', array( $this, 'make_search_button_a_button' ) );
+		add_action( 'mip_precontent', array( $this, 'add_homepage_precontent' ) );
+
 
 		remove_action( 'wp_head', array( $this, 'print_emoji_detection_script', 7 ) );
 		remove_action( 'admin_print_scripts', array( $this, 'print_emoji_detection_script' ) );
@@ -54,7 +56,7 @@ class mip_2015_Themekit {
 	public function more_setup() {
 
 		register_nav_menus( array(
-			'multi' => esc_html__( 'Multi-modal Icons', 'mip-2015' ),
+			'multimodal' => esc_html__( 'Multimodal Icons', 'mip-2015' ),
 			'social' => esc_html__( 'Social Links', 'mip-2015' )
 		) );
 
@@ -143,6 +145,12 @@ class mip_2015_Themekit {
 		<meta name="msapplication-square310x310logo" content="/favicons/largetile.png" /><?php
 
 	} // add_favicons()
+
+	public function add_homepage_precontent() {
+
+		get_template_part( 'template-parts/content', 'home' );
+
+	} // add_homepage_precontent()
 
 	/**
 	 * Adds PDF as a filter for the Media Library

@@ -6,27 +6,30 @@
 
 	ul {
 		@extend %listreset;
-		text-align 	: left;
-		display 	: none;
+		background-color: $color__bg-menu;
+		display 		: none;
+		text-align 		: left;
 
 		@media only screen and (min-width: $bp__menu-button+1) {
-			display 	: block;
-			text-align	: center;
+			border-bottom 	: 5px solid $blue;
+			border-top 		: 1px solid $gray;
+			display 		: block;
+			text-align		: center;
 		}
 
 		ul {
-			display		: inherit;
-			background	: $color__bg-menu-item-mobile;
+			background-color	: $color__bg-menu-item-mobile;
+			display				: inherit;
 
 			@media only screen and (min-width: $bp__menu-button+1) {
-				display: none;
 				box-shadow	: 0 3px 3px rgba(0, 0, 0, 0.2);
+				display 	: none;
+				left 		: 0;
 				position	: absolute;
-				z-index		: 99999;
+				opacity 	: 0;
 				transition 	: visibility 0s ease 0.5s,opacity 0.5s ease;
 				visibility 	: hidden;
-				opacity 	: 0;
-				left 		: 0;
+				z-index		: 99999;
 			} // breakpoint
 
 			ul {
@@ -38,8 +41,8 @@
 
 				a {
 					@media only screen and (max-width: $bp__menu-button) {
-						padding 	: 0.5em 3em;
 						border-left : none;
+						padding 	: 0.5em 3em;
 					}
 				}
 			}
@@ -50,8 +53,8 @@
 				}
 
 				@media only screen and (min-width: $bp__menu-button+1) {
-					white-space : nowrap;
 					color 		: $color__text-submenu;
+					white-space : nowrap;
 				}
 			}
 
@@ -69,18 +72,26 @@
 	} // first-level ul
 
 	li {
+		padding: 1em 0;
 
 		@media only screen and (min-width: $bp__menu-button+1) {
 			display 	: inline-block;
 			position 	: relative;
+
+			&:last-child {
+
+				> a {
+					border-right: none;
+				}
+			}
 		}
 
 		&:hover,
 		&.focus {
 
 			> a {
-				background: $color__bg-menu-item-mobile;
-				color: $color__text-menu-mobile-hover;
+				background-color: $color__bg-menu-item-mobile;
+				color 			: $color__text-menu-mobile-hover;
 
 				@media only screen and (min-width: $bp__menu-button+1) {
 					color: $color__text-menu-hover;
@@ -88,16 +99,19 @@
 			}
 
 		}
+
+
 	}
 
 	a {
 		color 			: $color__text-menu-mobile;
 		display			: block;
-		padding 		: 0.5em 1em;
+		padding 		: 0 1em;
 		text-decoration	: none;
 
 		@media only screen and (min-width: $bp__menu-button+1) {
-			color: $color__text-menu;
+			border-right: 2px solid $gray;
+			color 		: $color__text-menu;
 		}
 
 		@media only screen and (min-width: $bp__menu-font) {
@@ -123,7 +137,7 @@
 	.current_page_ancestor {
 
 		@media only screen and (min-width: $bp__menu-button+1) {
-			background: $color__bg-menu-current;
+			background-color: $color__bg-menu-current;
 		}
 
 		> a {
@@ -158,9 +172,9 @@
 	@extend %menutoggle;
 
 	@media only screen and (min-width: $bp__menu-button+1) {
-		display 	: none;
-		background 	: $color__bg-menu-button;
-		color 		: $color__text-menu-button;
+		background-color: $color__bg-menu-button;
+		color 			: $color__text-menu-button;
+		display 		: none;
 	}
 }
 

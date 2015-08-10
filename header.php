@@ -56,9 +56,11 @@ do_action( 'after_body' );
 				wp_nav_menu( array( 'theme_location' => 'primary', 'menu_id' => 'primary-menu' ) );
 
 		?></nav><!-- #site-navigation -->
-	</header><!-- #masthead -->
+	</header><!-- #masthead --><?php
 
-	<div id="content" class="site-content">
+	do_action( 'mip_precontent' );
+
+	?><div id="content" class="site-content">
 		<div class="wrap wrap-content">
 			<div class="breadcrumbs">
 				<div class="wrap-crumbs"><?php

@@ -28,6 +28,7 @@ class mip_2015_Menukit {
 		//add_filter( 'walker_nav_menu_start_el', array( $this, 'icon_before_menu_item' ), 10, 4 );
 		//add_filter( 'walker_nav_menu_start_el', array( $this, 'icon_after_menu_item' ), 10, 4 );
 		add_filter( 'walker_nav_menu_start_el', array( $this, 'icons_only_menu_item' ), 10, 4 );
+		add_filter( 'walker_nav_menu_start_el', array( $this, 'coin_flip_menu_item' ), 10, 4 );
 		add_shortcode( 'listmenu', array( $this, 'list_menu' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'add_menu_title_as_class' ), 10, 1 );
 
@@ -51,6 +52,40 @@ class mip_2015_Menukit {
 		return $menu_item;
 
 	} // add_menu_title_as_class()
+
+	/**
+	 * Adds markup for a coin-flip style menu item
+	 *
+	 * @param 	string 		$item_output		//
+	 * @param 	object 		$item				//
+	 * @param 	int 		$depth 				//
+	 * @param 	array 		$args 				//
+	 *
+	 * @return 	string 							modified menu
+	 */
+	public function coin_flip_menu_item( $item_output, $item, $depth, $args ) {
+
+		if ( 'multimodal' !== $args->theme_location ) { return $item_output; }
+
+		$atts 	= $this->get_attributes( $item );
+		$class 	= $this->get_svg_by_class( $item->classes );
+
+		if ( empty( $class ) ) { return $item_output; }
+
+		$output = '';
+
+		$output .= '<a href="' . $item->url . '" class="coin icon-menu" ' . $atts . '>';
+		$output .= '<div class="front menu-icon">';
+		$output .= $class;
+		$output .= '</div>';
+		$output .= '<div class="back menu-label"><span class="text">';
+		$output .= $item->title;
+		$output .= '</span></div>';
+		$output .= '</a>';
+
+		return $output;
+
+	} // coin_flip_menu_item()
 
 	/**
 	 * Add Down Caret to Menus with Children
@@ -96,7 +131,7 @@ class mip_2015_Menukit {
 	 */
 	public function icon_before_menu_item( $item_output, $item, $depth, $args ) {
 
-		if ( 'services' !== $args->theme_location && 'subheader' !== $args->theme_location ) { return $item_output; }
+		if ( 'multimodal' !== $args->theme_location ) { return $item_output; }
 
 		$atts 	= $this->get_attributes( $item );
 		$class 	= $this->get_svg_by_class( $item->classes );

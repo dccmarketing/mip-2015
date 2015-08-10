@@ -12,9 +12,11 @@
 global $mip_2015_themekit;
 
 		?></div><!-- .wrap -->
-	</div><!-- #content -->
+	</div><!-- #content --><?php
 
-	<footer id="colophon" class="site-footer" role="contentinfo">
+	do_action( 'mip_postcontent' );
+
+	?><footer id="colophon" class="site-footer" role="contentinfo">
 		<div class="wrap wrap-footer">
 			<div class="text-footer"><?php echo get_theme_mod( 'footer_text' ); ?></div>
 			<div class="site-info">
