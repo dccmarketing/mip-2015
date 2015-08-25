@@ -1,8 +1,221 @@
 .home {
 
+	.action-calls {
+		background-color: $blue;
+		color 			: $light;
+		padding 		: 12px 0;
+		text-align 		: center;
+
+		.single-call {
+			color 			: $light;
+			display 		: block;
+			margin 			: 0 auto;
+			max-width 		: 275px;
+			text-decoration : none;
+
+			@media only screen and (min-width: $bp__action-calls1) {
+				display : inline-block;
+				width 	: 48%;
+			}
+
+			@media only screen and (min-width: $bp__headings2) {
+				max-width: none;
+			}
+
+			@media only screen and (min-width: $bp__laptop) {
+				margin 	: 0 2.5%;
+				width 	: 42%;
+			}
+
+			div {
+				display: inline-block;
+			}
+		}
+
+		.text-calltoaction {
+			font-size 		: 32px;
+			font-weight 	: 700;
+			text-transform 	: uppercase;
+		}
+
+		.icon-calltoaction {
+			height 	: 40px;
+			position: relative;
+			width 	: 38px;
+
+			svg {
+				fill 	: $light;
+			}
+		}
+
+		.button-calltoaction {
+			border 			: 1px solid $light;
+			padding 		: 2px 16px;
+			text-transform 	: uppercase;
+			transform 		: translateY(-25%);
+			transition 		: $miptrans;
+
+			&:hover {
+				background-color: $light;
+				color 			: $blue;
+			}
+		}
+
+		.resources {
+			height 	: 28px;
+			left 	: 0;
+			position: absolute;
+			top 	: 15px;
+			width 	: 38px;
+		}
+
+		.contact {
+			height 	: 40px;
+			left 	: 0;
+			position: absolute;
+			top 	: 8px;
+			width 	: 48px;
+		}
+
+		.contact-now {
+			.button-calltoaction {
+				margin-left: 8px;
+			}
+		}
+	}
+
+	.site-main {
+
+		@media only screen and (min-width: $bp__tablet) {
+			display: flex;
+		}
+	}
+
+	.widget_woothemes_testimonials {
+		padding: 1em;
+
+		@media only screen and (min-width: $bp__tablet) {
+			margin 	: 2em 0;
+			padding : 0;
+
+			.testimonials-list {
+				margin 	: 0 auto;
+				position: relative;
+				width 	: 80%;
+			}
+
+			.quote {
+				margin 	: 0 auto;
+				width 	: 90%;
+
+				&:before,
+				&:after {
+					color 		: $blue;
+					font-size 	: 200px;
+					position 	: absolute;
+					top 		: -45px;
+				}
+
+				&:before {
+					content : "“";
+					left 	: 0;
+				}
+
+				&:after {
+					content : "”";
+					right 	: 0;
+				}
+			}
+		}
+	}
+
+	.testimonials {
+
+		blockquote {
+			font-size 	: 32px;
+			margin 		: 0;
+			text-align 	: center;
+
+			@media only screen and (min-width: $bp__tablet) {
+				margin 		: 1em 3em;
+			}
+		}
+
+		cite {
+			display 	: block;
+			text-align 	: center;
+		}
+	}
 }
 
+.news-home {
+	background-color: $light;
+	margin-bottom 	: $size__default-bot-marg;
+	width 			: 100%;
 
+	@media only screen and (min-width: $bp__tablet) {
+		border 			: 1px solid $gray;
+		margin-right	: 4%;
+		padding 		: 1em;
+		width 			: 48%;
+	}
+
+	.header-news {
+		font-size 		: 28px;
+		font-weight 	: 400;
+		margin 			: 0;
+		text-transform 	: uppercase;
+	}
+
+	article {
+
+		@media only screen and (min-width: $bp__tablet) {
+			margin: 0;
+		}
+
+		.entry-title {
+			line-height : 1;
+			margin 		: 0;
+
+			a {
+				color 			: $blue;
+				font-size 		: 20px;
+				text-decoration : none;
+			}
+		}
+
+		.entry-content {
+			margin-top: 0;
+
+			p {
+				margin: 0;
+			}
+		}
+	}
+}
+
+.video-home {
+	width: 100%;
+
+	article {
+		margin-bottom: 0;
+	}
+
+	@media only screen and (min-width: $bp__tablet) {
+		width: 48%;
+	}
+
+	.page-content {
+		margin-top: 0;
+	}
+
+	p {
+		margin 		: 0;
+		text-align 	: center;
+	}
+}
+
+// Bullets for slider
 .tp-bullets.simplebullets.round {
 
 	.bullet {

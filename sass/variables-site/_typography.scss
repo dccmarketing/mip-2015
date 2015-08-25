@@ -1,4 +1,15 @@
-$font__main 				: sans-serif;
+@font-face {
+	font-family : 'fontello';
+	src 		: url('fonts/fontello.eot?47129516');
+	src 		: url('fonts/fontello.eot?47129516#iefix') format('embedded-opentype'),
+				url('fonts/fontello.woff?47129516') format('woff'),
+				url('fonts/fontello.ttf?47129516') format('truetype'),
+				url('fonts/fontello.svg?47129516#fontello') format('svg');
+	font-weight : normal;
+	font-style 	: normal;
+}
+
+$font__main 				: 'Montserrat', sans-serif;
 $font__code 				: Monaco, Consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
 $font__pre 					: "Courier 10 Pitch", Courier, monospace;
 $font__line-height-body 	: 1.5;
@@ -8,22 +19,29 @@ $font__size-multimodal 		: 56px;
 
 /*
 All pages:
+“Coalition members” text – bold 22
+
 main menu text – book 24
 “decatur and macon county, illinois” in header – bold 16.634
 footer text – medium 20
 footer EDC info – medium 18
-“Coalition members” text – bold 22
+
+
 
 Homepage:
-“Announcements” heading – book 28
 news post title – bold 20
+
+“Announcements” heading – book 28
 testimonial text – book 36 (but this could vary, depending on size of quote or testimonial that needs to fit that area)
+
+
 
 Subpage:
 page title “Key industries" - bold 80
-sidebar menu title “Key industries” - book 26
 sidebar menu parent – bold 23
 sidebar menu child page – bold 23 (active) / book 21 (inactive)
-subpage title “manufacturing” - light 34
 table heading “employees” and “company” - bold 22 (headings) / light 22 (descriptor)
- */
+
+sidebar menu title “Key industries” - book 26
+subpage title “manufacturing” - light 34
+*/

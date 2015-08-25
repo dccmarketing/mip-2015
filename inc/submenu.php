@@ -49,6 +49,7 @@ class Submenu_Walker extends Walker_Nav_Menu {
 		 */
 		$top_level_elements = array();
 		$children_elements  = array();
+
 		foreach ( $elements as $e) {
 
 			if ( 0 == $e->$parent_field ) {
@@ -67,7 +68,7 @@ class Submenu_Walker extends Walker_Nav_Menu {
 		 * when none of the elements is top level
 		 * assume the first one must be root of the sub elements
 		 */
-		if ( empty($top_level_elements) ) {
+		if ( empty( $top_level_elements ) ) {
 
 			$first 				= array_slice( $elements, 0, 1 );
 			$root 				= $first[0];
@@ -111,7 +112,7 @@ class Submenu_Walker extends Walker_Nav_Menu {
 		$lasst 		= substr( $topper, $pos3 + 1 );
 		$submenu 	= substr( $lasst, 0, -6 );
 
-	return $submenu;
+		return $submenu;
 
 	} // walk()
 

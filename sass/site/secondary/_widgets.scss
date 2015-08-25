@@ -1,16 +1,35 @@
 .widget-area {
-	width 		: 100%;
-	float 		: left;
-	overflow 	: auto;
-	padding 	: 1em;
+	display 	: none;
 
-	@media only screen and (min-width: $bp__tablet) {
-		width: 27.5%;
-		float: right;
+	@media only screen and (min-width: $bp__menu-button+1) {
+		display 	: block;
+		float 		: left;
+		margin 		: 0;
+		overflow 	: auto;
+		padding 	: 1em;
+		width 		: $size__sidebar;
 
-		&.sidebar-content {
-			float 	: left;
-			margin 	: 0 0 0 2.5%;
+		&.sidebar-right {
+			float: right;
+		}
+
+		&:after {
+			background-color: $ltgray;
+			bottom 			: 0;
+			content 		: "";
+			left 			: 0;
+			position 		: absolute;
+			top 			: 0;
+			width 			: $size__sidebar;
+			z-index 		: -1;
+		}
+
+		.page-template-page_lois & {
+			display: none;
+
+			&:after {
+				display: none;
+			}
 		}
 	}
 }
@@ -21,6 +40,12 @@
 	/* Make sure select elements fit in widgets */
 	select {
 		max-width: 100%;
+	}
+
+	.widget-title {
+		font-size 	: 26px;
+		font-weight : 400;
+		margin 		: 0 0 0.75em;
 	}
 }
 
@@ -33,5 +58,57 @@
 
 	.search-field {
 		width: 98.5%;
+	}
+}
+
+.gksm-custom-menu-widget {
+
+	ul {
+		list-style: none;
+
+		ul {
+			margin-left: 0;
+		}
+	}
+
+	a {
+		color 			: $gray;
+		font-size 		: 23px;
+		font-weight 	: 700;
+		text-decoration : none;
+	}
+
+	.menu {
+		padding-left: 0;
+	}
+
+	.sub-menu {
+		a {
+			font-size 	: 21px;
+			font-weight : 400;
+		}
+	}
+
+	.current-menu-item {
+		> a {
+			color 		: $darkergreen;
+			font-weight : 700;
+		}
+	}
+
+	.menu-item-has-children {
+
+		@media only screen and (min-width: $bp__menu-button+1) {
+
+			.sub-menu {
+				display: none;
+			}
+
+			.show-hide {
+				float 		: right;
+				text-align 	: center;
+				width 		: 2em;
+			}
+		}
 	}
 }

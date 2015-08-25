@@ -12,24 +12,27 @@
 
 		@media only screen and (min-width: $bp__menu-button+1) {
 			border-bottom 	: 5px solid $blue;
-			border-top 		: 1px solid $gray;
+			border-top 		: 1px solid $med;
 			display 		: block;
 			text-align		: center;
 		}
 
 		ul {
 			background-color	: $color__bg-menu-item-mobile;
+			border 				: none;
 			display				: inherit;
 
 			@media only screen and (min-width: $bp__menu-button+1) {
-				box-shadow	: 0 3px 3px rgba(0, 0, 0, 0.2);
-				display 	: none;
-				left 		: 0;
-				position	: absolute;
-				opacity 	: 0;
-				transition 	: visibility 0s ease 0.5s,opacity 0.5s ease;
-				visibility 	: hidden;
-				z-index		: 99999;
+				background-color: $blue;
+				box-shadow		: 0 3px 3px rgba(0, 0, 0, 0.2);
+				display 		: none;
+				left 			: 0;
+				position		: absolute;
+				opacity 		: 0;
+				text-align 		: left;
+				transition 		: visibility 0s ease 0.5s,opacity 0.5s ease;
+				visibility 		: hidden;
+				z-index			: 99999;
 			} // breakpoint
 
 			ul {
@@ -44,21 +47,39 @@
 						border-left : none;
 						padding 	: 0.5em 3em;
 					}
+
+					@media only screen and (min-width: $bp__menu-button+1) {
+						white-space : nowrap;
+					}
 				}
 			}
 
 			a {
+				//border-right: none;
+
 				@media only screen and (max-width: $bp__menu-button) {
 					padding: 0.5em 2em;
 				}
 
 				@media only screen and (min-width: $bp__menu-button+1) {
 					color 		: $color__text-submenu;
-					white-space : nowrap;
+					font-size 	: 20px;
+					max-width 	: 265px;
+					padding 	: 0 1em;
+				}
+
+				&:after {
+					content: "";
+					display: none;
 				}
 			}
 
 			li {
+				display: block;
+
+				@media only screen and (min-width: $bp__menu-button+1) {
+					padding: 0.5em 0;
+				}
 
 				&:last-child {
 
@@ -66,16 +87,37 @@
 						padding-bottom: 0;
 					}
 				}
-
 			}
+
+			.current_page_item,
+			.current-menu-item,
+			.current-menu-parent,
+			.current_page_ancestor {
+
+				> a {
+					color: $light;
+				}
+			}
+
 		} // .submenu ul
+
+		li {
+
+			&:last-child {
+				a:after {
+					content: "";
+					display: none;
+				}
+			}
+		}
+
 	} // first-level ul
 
 	li {
-		padding: 1em 0;
 
 		@media only screen and (min-width: $bp__menu-button+1) {
 			display 	: inline-block;
+			padding 	: 1em 0;
 			position 	: relative;
 
 			&:last-child {
@@ -88,6 +130,14 @@
 
 		&:hover,
 		&.focus {
+
+			> ul {
+				@media only screen and (min-width: $bp__menu-button+1) {
+					display 	: block;
+					opacity 	: 1;
+					visibility 	: visible;
+				}
+			}
 
 			> a {
 				background-color: $color__bg-menu-item-mobile;
@@ -106,12 +156,19 @@
 	a {
 		color 			: $color__text-menu-mobile;
 		display			: block;
-		padding 		: 0 1em;
 		text-decoration	: none;
 
 		@media only screen and (min-width: $bp__menu-button+1) {
-			border-right: 2px solid $gray;
+			//border-right: 2px solid $med;
 			color 		: $color__text-menu;
+
+			&:after {
+				color 		: $gray;
+				content 	: "|";
+				display 	: inline-block;
+				font-weight : 400;
+				margin 		: 0 0.75em;
+			}
 		}
 
 		@media only screen and (min-width: $bp__menu-font) {
@@ -141,7 +198,12 @@
 		}
 
 		> a {
-			color: $color__text-menu-current;
+			color 		: $color__text-menu-current-mobile;
+			font-weight : 700;
+
+			@media only screen and (min-width: $bp__menu-button+1) {
+				color: $color__text-menu-current;
+			}
 		}
 
 		&:hover,
@@ -149,6 +211,11 @@
 
 			> a {
 				color: $color__text-menu-current-hover;
+
+				@media only screen and (min-width: $bp__tablet) and (max-width: $bp__laptop) {
+					color 		: $light;
+					font-weight : 700;
+				}
 			}
 		}
 	}
@@ -158,12 +225,63 @@
 		.nav-menu {
 			@extend %menutoggle;
 		}
+
+		.menu-main-menu-container {
+			@media only screen and (min-width: $bp__tablet) and (max-width: $bp__laptop) {
+				transform: translateX(0);
+			}
+
+		}
+
+		.menu-toggle {
+			right: $size__menu_width;
+		}
 	}
+
+	.nav-menu {
+		> li {
+			> a {
+				@media only screen and (max-width: $bp__menu-button) {
+					padding: 0.5em 1em;
+				}
+			}
+		}
+	}
+
+	.show-hide {
+		display: none;
+	}
+
 } // .main-navigation
 
 // Center Menu
 .menu-main-menu-container {
 	margin		: 0 auto;
+
+	/**
+	 * Tablet menu - slide in from left - on top or pushing content
+	 */
+	@media only screen and (min-width: $bp__tablet) and (max-width: $bp__laptop) {
+		background-color: $darkblue;
+		bottom 			: 0;
+		height 			: 100%;
+		left 			: 0;
+		overflow 		: auto;
+		position 		: fixed;
+		top 			: 0;
+		transform 		: translateX( -$size__menu_width);
+		transition 		: transform 0.4s ease;
+		width 			: $size__menu_width;
+		z-index 		: 9999;
+
+		.admin-bar & {
+			padding-top: $size__wp-admin-bar-1;
+
+			@media only screen and (min-width: $bp__admin-bar-1) {
+				padding-top: $size__wp-admin-bar-2;
+			}
+		}
+	}
 }
 
 
@@ -171,9 +289,16 @@
 .menu-toggle {
 	@extend %menutoggle;
 
-	@media only screen and (min-width: $bp__menu-button+1) {
+	@media only screen and (min-width: $bp__tablet) and (max-width: $bp__laptop) {
 		background-color: $color__bg-menu-button;
 		color 			: $color__text-menu-button;
+		position 		: absolute;
+		right 			: 0;
+		width 			: 200px;
+		z-index 		: 99;
+	}
+
+	@media only screen and (min-width: $bp__menu-button+1) {
 		display 		: none;
 	}
 }

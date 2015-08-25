@@ -1,5 +1,6 @@
 .site-header {
 	// DO NOT ADD PADDING HERE! - it screws up menus
+	background-color: $light;
 	overflow 		: auto;
 
 	@media only screen and (min-width: $bp__menu-button+1) {
@@ -7,8 +8,7 @@
 	}
 
 	.wrap {
-		overflow 	: auto;
-		padding 	: 0;
+		padding: 0;
 	}
 }
 

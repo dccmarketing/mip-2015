@@ -1,5 +1,29 @@
 .breadcrumbs {
-	padding: 1em;
+	background-color: $gray;
+	color 			: $light;
+	padding 		: 0.5em 2em;
+
+	@media only screen and (min-width: $bp__tablet) {
+		padding-left: 39%;
+
+		.page-template-page_lois &,
+		.page-template-page_full-width &,
+		.search &,
+		.error404 &,
+		.single-post & {
+			padding: 0;
+
+			.wrap-crumbs {
+				margin 		: 0 auto;
+				max-width 	: $size__max-width;
+				padding 	: 0 2em;
+			}
+		}
+	}
+
+	a {
+		color: $light;
+	}
 
 	.home & {
 		display: none;

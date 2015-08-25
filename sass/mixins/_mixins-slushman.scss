@@ -48,10 +48,10 @@
 	}
 
 	$marginperc	: percentage( $margin / 100 );
-	width		: $width;
 	float		: left;
 	margin-left	: $marginperc;
 	margin-right: $marginperc;
+	width		: $width;
 }
 
 /**
@@ -61,9 +61,9 @@
  */
 @mixin evencols( $quantity ) {
 
-	width 			: percentage( ( ( 100 / $quantity ) - 1 ) / 100 );
 	display 		: inline-block;
 	vertical-align 	: top;
+	width 			: percentage( ( ( 100 / $quantity ) - 1 ) / 100 );
 
 } // evencols()
 
@@ -79,11 +79,11 @@
 
 	$marginperc	 	: percentage( $margin / 100 );
 
-	width			: $width;
+	display 		: inline-block;
 	margin-left	 	: $marginperc;
 	margin-right 	: $marginperc;
-	display 		: inline-block;
 	vertical-align 	: top;
+	width			: $width;
 
 }
 
@@ -140,13 +140,13 @@
 
 
 %buttonreset {
-	border 			: none;
-	box-shadow 		: none;
-	text-shadow 	: none;
-	font-size 		: 1em;
-	border-radius 	: 0;
 	background 		: transparent;
+	border 			: none;
+	border-radius 	: 0;
+	box-shadow 		: none;
+	font-size 		: 1em;
 	padding 		: 0;
+	text-shadow 	: none;
 }
 
 %clearafter {
@@ -163,10 +163,10 @@
  * Hides text
  */
 %hidetext {
-	text-indent	: 100%;
-	overflow	: hidden;
-	white-space	: nowrap;
 	font-size 	: 0;
+	overflow	: hidden;
+	text-indent	: 100%;
+	white-space	: nowrap;
 }
 
 %listreset {
@@ -176,25 +176,31 @@
 }
 
 %menutoggle {
-	display			: block;
-	width			: 100%;
+	background-color: $color__bg-menu-button-mobile;
 	border			: none;
-	line-height		: 1.25em;
-	font-size		: 1.25em;
-	box-shadow		: none;
 	border-radius	: 0;
-	text-shadow		: none;
-	outline 		: 0;
-	background		: $color__bg-menu-button-mobile;
+	box-shadow		: none;
 	color 			: $color__text-menu-button-mobile;
+	display			: block;
+	font-size		: 1.25em;
+	line-height		: 1.25em;
+	outline 		: 0;
+	text-shadow		: none;
+	transition 		: $miptrans;
+	width			: 100%;
 
 	&:hover,
 	&:focus,
 	&:active {
-		border		: none;
-		box-shadow	: none;
-		border-color: inherit;
-		background 	: $color__bg-menu-button-pseudo;
+		background-color: $color__bg-menu-button-pseudo;
+		border			: none;
+		border-color 	: inherit;
+		box-shadow		: none;
+		transition 		: $miptrans;
+	}
+
+	@media only screen and (min-width: $bp__tablet) {
+		background-color: transparent;
 	}
 
 	@media only screen and (min-width: $bp__menu-button+1) {

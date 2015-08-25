@@ -18,12 +18,19 @@
 	}
 
 	.wrap {
+		max-width 	: 87.5%;
 		overflow 	: auto;
-		padding 	: 1em;
+		padding 	: 1em 0;
+	}
+}
 
-		@media only screen and (max-width: $bp__footer - 1) {
-			max-width 	: 75%;
-		}
+.logo-limitless {
+	text-align: center;
+
+	.limitless {
+		fill 	: $light;
+		height 	: 90px;
+		width 	: 225px;
 	}
 }
 
@@ -57,7 +64,53 @@
 }
 
 .text-footer {
-	@media only screen and (max-width: $bp__footer) {
-		text-align: center;
+	margin 		: 0 auto;
+	max-width 	: $size__max-width - 100;
+	text-align 	: center;
+}
+
+.wrap-partners {
+	background-color: $ltgray;
+	border-top 		: 5px solid $blue;
+	padding 		: 0.5em;
+
+	h3 {
+		font-size 		: 22px;
+		margin 			: 0;
+		text-align 		: center;
+		text-transform 	: uppercase;
+	}
+
+	ul {
+		align-items 	: center;
+		display 		: flex;
+		flex-wrap 		: wrap;
+		justify-content : center;
+		list-style 		: none;
+		margin 			: 0 auto;
+		max-width 		: $size__max-width;
+		padding 		: 0;
+		text-align 		: center;
+
+		li {
+			display 		: inline-block;
+			flex-grow 		: 1;
+			margin 			: 0 2%;
+			width 			: 45%;
+			vertical-align 	: top;
+
+			@media only screen and (min-width: $bp__action-calls1) {
+				width: 28%;
+			}
+
+			@media only screen and (min-width: $bp__multimodal) {
+				margin 	: auto;
+				width 	: auto;
+			}
+		}
+	}
+
+	a {
+		display: block;
 	}
 }

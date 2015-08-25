@@ -4,6 +4,15 @@ $size__site-sidebar		: 25%;
 $size__default-bot-marg	: 1.5em;
 $size__max-width 		: 1100px;
 
+$size__content 			: 63%;
+$size__sidebar 			: 35%;
+$size__header-padding 	: 37.5%;
+$size__menu_width 		: 375px;
+
+
+$size__wp-admin-bar-1 	: 46px;
+$size__wp-admin-bar-2 	: 32px;
+
 /**
  * Login Page
  */
@@ -14,8 +23,11 @@ $size__login-logo-height: 84px;
 /**
  * Breakpoints
  */
+$bp__admin-bar-1		: 783px;
 $bp__multimodal1 		: 500px;
-$bp__menu-button		: 767px; // 37.5em
+$bp__action-calls1 		: 525px;
+$bp__action-calls 		: 625px;
+$bp__menu-button		: 1024px; // 37.5em
 $bp__headings1 			: 700px; // 43.75em
 $bp__tablet				: 768px; // 48em
 $bp__multimodal 		: 835px;

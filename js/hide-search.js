@@ -13,14 +13,14 @@
 	page = document.getElementById( 'page' );
 	if ( ! page ) { return; }
 
-	button = document.getElementsByClassName( 'open-search' )[0];
+	button = document.getElementsByClassName( 'search-button' )[0];
 	if ( ! button ) { return; }
 
 	search.setAttribute( 'aria-hidden', 'true' );
 
-	button.onclick = function() {
+	button.onclick = function( e ) {
 
-		event.preventDefault();
+		e.preventDefault();
 
 		if ( -1 !== search.className.indexOf( 'open' ) ) {
 
@@ -41,6 +41,16 @@
 		} else {
 
 			page.className += ' open';
+
+		}
+
+		if ( -1 !== button.className.indexOf( 'open' ) ) {
+
+			button.className = button.className.replace( ' open', '' );
+
+		} else {
+
+			button.className += ' open';
 
 		}
 

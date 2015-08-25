@@ -78,6 +78,39 @@ class mip_2015_Customize {
 			)
 		);
 
+		// Resources Call-to-Action
+		$wp_customize->add_section( 'resources',
+			array(
+				'capability' 	=> 'edit_theme_options',
+				'description' 	=> esc_html__( 'Options for the Resources call-to-action on the homepage.', 'mip-2015' ),
+				'panel' 		=> 'theme_options',
+				'priority' 		=> 10,
+				'title' 		=> esc_html__( 'Resources', 'mip-2015' )
+			)
+		);
+
+		// Contact Us Call-to-Action
+		$wp_customize->add_section( 'contact-us',
+			array(
+				'capability' 	=> 'edit_theme_options',
+				'description' 	=> esc_html__( 'Options for the Contact Us call-to-action on the homepage.', 'mip-2015' ),
+				'panel' 		=> 'theme_options',
+				'priority' 		=> 10,
+				'title' 		=> esc_html__( 'Contact Us', 'mip-2015' )
+			)
+		);
+
+		// Coalition Partners Options
+		$wp_customize->add_section( 'partners_options',
+			array(
+				'capability' 	=> 'edit_theme_options',
+				'description' 	=> esc_html__( 'Logos for the Coalition Partners listing.', 'mip-2015' ),
+				'panel' 		=> 'theme_options',
+				'priority' 		=> 10,
+				'title' 		=> esc_html__( 'Coalition Partners', 'mip-2015' )
+			)
+		);
+
 
 
 		// Footer Text Field
@@ -208,6 +241,163 @@ class mip_2015_Customize {
 		);
 		$wp_customize->get_setting( 'default_header' )->transport = 'postMessage';
 
+
+
+
+
+		// Resources Page Select Field
+		$wp_customize->add_setting(
+			'resources_page_field',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'resources_page_field',
+			array(
+				'description' 	=> esc_html__( 'This is the URL for the "Resources" call-to-action on the home page.', 'mip-2015' ),
+				'label' => esc_html__( 'Select Resources Page', 'mip-2015' ),
+				'section' => 'resources',
+				'settings' => 'resources_page_field',
+				'type' => 'dropdown-pages'
+			)
+		);
+		$wp_customize->get_setting( 'resources_page_field' )->transport = 'postMessage';
+
+		// Resources Label
+		$wp_customize->add_setting(
+			'label_resources',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'label_resources',
+			array(
+				'description' 	=> esc_html__( '', 'mip-2015' ),
+				'label'  	=> esc_html__( 'Resources Label', 'mip-2015' ),
+				'section'  	=> 'resources',
+				'settings' 	=> 'label_resources',
+				'type' 		=> 'text'
+			)
+		);
+		$wp_customize->get_setting( 'label_resources' )->transport = 'postMessage';
+
+		// Resources Button Text
+		$wp_customize->add_setting(
+			'button_text_resources',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'button_text_resources',
+			array(
+				'description' 	=> esc_html__( '', 'mip-2015' ),
+				'label'  	=> esc_html__( 'Resources Button Text', 'mip-2015' ),
+				'section'  	=> 'resources',
+				'settings' 	=> 'button_text_resources',
+				'type' 		=> 'text'
+			)
+		);
+		$wp_customize->get_setting( 'button_text_resources' )->transport = 'postMessage';
+
+
+
+
+
+
+		// Contact Us Page Select Field
+		$wp_customize->add_setting(
+			'contact_us_page_field',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'contact_us_page_field',
+			array(
+				'description' 	=> esc_html__( 'This is the URL for the "Contact Us" call-to-action on the home page.', 'mip-2015' ),
+				'label' => esc_html__( 'Select Contact Us Page', 'mip-2015' ),
+				'section' => 'contact-us',
+				'settings' => 'contact_us_page_field',
+				'type' => 'dropdown-pages'
+			)
+		);
+		$wp_customize->get_setting( 'contact_us_page_field' )->transport = 'postMessage';
+
+		// Contact Us Label
+		$wp_customize->add_setting(
+			'label_contact_us',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'label_contact_us',
+			array(
+				'description' 	=> esc_html__( '', 'mip-2015' ),
+				'label'  	=> esc_html__( 'Contact Us Label', 'mip-2015' ),
+				'section'  	=> 'contact-us',
+				'settings' 	=> 'label_contact_us',
+				'type' 		=> 'text'
+			)
+		);
+		$wp_customize->get_setting( 'label_contact_us' )->transport = 'postMessage';
+
+		// Contact Us Button Text
+		$wp_customize->add_setting(
+			'button_text_contact_us',
+			array(
+				'default'  	=> '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			'button_text_contact_us',
+			array(
+				'description' 	=> esc_html__( '', 'mip-2015' ),
+				'label'  	=> esc_html__( 'Contact Us Button Text', 'mip-2015' ),
+				'section'  	=> 'contact-us',
+				'settings' 	=> 'button_text_contact_us',
+				'type' 		=> 'text'
+			)
+		);
+		$wp_customize->get_setting( 'button_text_contact_us' )->transport = 'postMessage';
+
+
+
+
+
+
+
+
+		// Partners Logos
+		$wp_customize->add_setting(
+			'partners_logos',
+			array(
+				'default' => '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			new tad_Multi_Image_Control(
+				$wp_customize,
+				'partners_logos',
+				array(
+					'description' 	=> esc_html__( 'These logos appear in the footer under "Coalition Partners".', 'mip-2015' ),
+					'label' => esc_html__( 'Partners Logos', 'mip-2015' ),
+					'section' => 'partners_options',
+					'settings' => 'partners_logos'
+				)
+			)
+		);
+		$wp_customize->get_setting( 'partners_logos' )->transport = 'postMessage';
 
 
 /*

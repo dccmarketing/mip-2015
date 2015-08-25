@@ -58,14 +58,14 @@ do_action( 'after_body' );
 		?></nav><!-- #site-navigation -->
 	</header><!-- #masthead --><?php
 
-	do_action( 'mip_precontent' );
+	do_action( 'after_header' );
 
-	?><div id="content" class="site-content">
+	?><div class="breadcrumbs">
+		<div class="wrap-crumbs"><?php
+
+			do_action( 'mip_2015_breadcrumbs' );
+
+		?></div><!-- .wrap-crumbs -->
+	</div><!-- .breadcrumbs -->
+	<div id="content" class="site-content">
 		<div class="wrap wrap-content">
-			<div class="breadcrumbs">
-				<div class="wrap-crumbs"><?php
-
-					do_action( 'mip_2015_breadcrumbs' );
-
-				?></div><!-- .wrap-crumbs -->
-			</div><!-- .breadcrumbs -->

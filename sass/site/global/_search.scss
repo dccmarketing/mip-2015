@@ -7,6 +7,15 @@
 	transition 		: $miptrans;
 	width 			: 100%;
 
+	.wrap {
+
+		&:after {
+			clear 	: both;
+			content : "";
+			display : block;
+		}
+	}
+
 	&.open {
 		margin-top: 0;
 	}
@@ -15,6 +24,7 @@
 		margin 		: 0 auto;
 		position 	: relative;
 		text-align 	: center;
+		width 		: 100%;
 	}
 
 	.search-field {

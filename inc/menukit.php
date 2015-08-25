@@ -24,7 +24,7 @@ class mip_2015_Menukit {
 	 */
 	private function loader() {
 
-		//add_filter( 'walker_nav_menu_start_el', array( $this, 'menu_caret' ), 10, 4 );
+		add_filter( 'walker_nav_menu_start_el', array( $this, 'menu_caret' ), 10, 4 );
 		//add_filter( 'walker_nav_menu_start_el', array( $this, 'icon_before_menu_item' ), 10, 4 );
 		//add_filter( 'walker_nav_menu_start_el', array( $this, 'icon_after_menu_item' ), 10, 4 );
 		add_filter( 'walker_nav_menu_start_el', array( $this, 'icons_only_menu_item' ), 10, 4 );
@@ -110,7 +110,7 @@ class mip_2015_Menukit {
 
 		$output .= '<a href="' . $item->url . '">';
 		$output .= $item->title;
-		$output .= '<span class="children">' . $dcc_2015_themekit->get_svg( 'caret-down' ) . '</span>';
+		$output .= '<span class="show-hide">+</span>';
 		$output .= '</a>';
 
 		return $output;

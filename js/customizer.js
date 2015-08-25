@@ -39,12 +39,32 @@
 		} );
 	} );
 
-	wp.customize( 'text_field', function( value ) {
+	wp.customize( 'label_resources', function( value ) {
 		value.bind( function( to ) {
-			$( '.entry-title' ).text( to );
+			$( '.download-now .text-calltoaction' ).text( to );
 		} );
 	} );
 
+	wp.customize( 'label_contact_us', function( value ) {
+		value.bind( function( to ) {
+			$( '.contact-now .text-calltoaction' ).text( to );
+		} );
+	} );
+
+	wp.customize( 'button_text_resources', function( value ) {
+		value.bind( function( to ) {
+			$( '.download-now .button-calltoaction' ).text( to );
+		} );
+	} );
+
+	wp.customize( 'button_text_contact_us', function( value ) {
+		value.bind( function( to ) {
+			$( '.contact-now .button-calltoaction' ).text( to );
+		} );
+	} );
+
+
+/*
 	// Doesn't work instantly, works after you go out of the field
 	wp.customize( 'url_field', function( value ) {
 		value.bind( function( to ) {
@@ -75,7 +95,7 @@
 		} );
 	} );
 
-/*
+
 	wp.customize( 'color_field', function( value ) {
 		value.bind( function( to ) {
 			$( '.color_field' ).css( {

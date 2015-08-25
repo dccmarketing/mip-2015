@@ -5,7 +5,36 @@
  */
 ( function() {
 
-	var container, button, menu, links, subMenus;
+	/**
+	 * Sets or removes .focus class on an element.
+	 */
+	function toggleFocus() {
+
+		var self = this;
+
+		// Move up through the ancestors of the current link until we hit .nav-menu.
+		while ( -1 === self.className.indexOf( 'nav-menu' ) ) {
+
+			// On li elements toggle the class .focus.
+			if ( 'li' === self.tagName.toLowerCase() ) {
+
+				if ( -1 !== self.className.indexOf( 'focus' ) ) {
+
+					self.className = self.className.replace( ' focus', '' );
+
+				} else {
+
+					self.className += ' focus';
+
+				}
+
+			}
+
+			self = self.parentElement;
+		}
+	}
+
+	var container, button, menu, links, subMenus, bod;
 
 	container = document.getElementById( 'site-navigation' );
 	if ( ! container ) {
@@ -40,6 +69,16 @@
 
 	}
 
+	/**
+	 * Tablet menu - pushing out from left
+	 */
+	bod = document.getElementsByTagName( 'body' )[0];
+	if ( 'undefined' === typeof bod ) {
+
+		return;
+
+	}
+
 	button.onclick = function() {
 
 		if ( -1 !== container.className.indexOf( 'toggled' ) ) {
@@ -53,6 +92,19 @@
 			container.className += ' toggled';
 			button.setAttribute( 'aria-expanded', 'true' );
 			menu.setAttribute( 'aria-expanded', 'true' );
+
+		}
+
+		/**
+		 * Tablet menu - pushing out from left
+		 */
+		if ( -1 !== bod.className.indexOf( 'toggled' ) ) {
+
+			bod.className = bod.className.replace( ' toggled', '' );
+
+		} else {
+
+			bod.className += ' toggled';
 
 		}
 	};
@@ -74,35 +126,6 @@
 		links[i].addEventListener( 'focus', toggleFocus, true );
 		links[i].addEventListener( 'blur', toggleFocus, true );
 
-	}
-
-	/**
-	 * Sets or removes .focus class on an element.
-	 */
-	function toggleFocus() {
-
-		var self = this;
-
-		// Move up through the ancestors of the current link until we hit .nav-menu.
-		while ( -1 === self.className.indexOf( 'nav-menu' ) ) {
-
-			// On li elements toggle the class .focus.
-			if ( 'li' === self.tagName.toLowerCase() ) {
-
-				if ( -1 !== self.className.indexOf( 'focus' ) ) {
-
-					self.className = self.className.replace( ' focus', '' );
-
-				} else {
-
-					self.className += ' focus';
-
-				}
-
-			}
-
-			self = self.parentElement;
-		}
 	}
 
 } )();

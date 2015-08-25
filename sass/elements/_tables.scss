@@ -2,3 +2,26 @@ table {
 	margin 	: 0 0 1.5em;
 	width 	: 100%;
 }
+
+.table-industries {
+	font-size: 22px;
+
+	a {
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	th,
+	td {
+		padding 	: 0 1em;
+		text-align 	: left;
+
+		&:nth-of-type(1) {
+			text-align 	: right;
+			width 		: 150px;
+		}
+	}
+}

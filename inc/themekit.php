@@ -33,7 +33,7 @@ class mip_2015_Themekit {
 		add_filter( 'post_mime_types', array( $this, 'add_mime_types' ) );
 		add_filter( 'upload_mimes', array( $this, 'custom_upload_mimes' ) );
 		add_filter( 'body_class', array( $this, 'page_body_classes' ) );
-		//add_action( 'wp_head', array( $this, 'background_images' ) );
+		add_action( 'wp_head', array( $this, 'background_images' ) );
 		add_action( 'wp_head', array( $this, 'add_favicons' ) );
 		add_filter( 'excerpt_length', array( $this, 'excerpt_length' ) );
 		add_filter( 'excerpt_more', array( $this, 'excerpt_read_more' ) );
@@ -41,11 +41,11 @@ class mip_2015_Themekit {
 		add_action( 'mip_2015_breadcrumbs', array( $this, 'breadcrumbs' ) );
 		add_action( 'after_body', array( $this, 'add_hidden_search' ) );
 		add_filter( 'get_search_form', array( $this, 'make_search_button_a_button' ) );
-		add_action( 'mip_precontent', array( $this, 'add_homepage_precontent' ) );
-
-
-		remove_action( 'wp_head', array( $this, 'print_emoji_detection_script', 7 ) );
-		remove_action( 'admin_print_scripts', array( $this, 'print_emoji_detection_script' ) );
+		add_action( 'after_header', array( $this, 'add_precontent' ) );
+		add_filter( 'wpseo_breadcrumb_single_link', array( $this, 'unlink_private_pages' ), 10, 2 );
+		add_filter( 'wp_seo_get_bc_title', array( $this, 'remove_private' ) );
+		//add_filter( 'mip_2015_precontent_title', array( $this, 'precontent_title' ) );
+		add_action( 'after_content', array( $this, 'add_postcontent' ) );
 
 	} // loader()
 
@@ -83,6 +83,7 @@ class mip_2015_Themekit {
 		wp_enqueue_style( 'dashicons' );
 		// wp_enqueue_style( 'mip-2015-fonts', fonts_url(), array(), null );
 		wp_enqueue_script( 'mip-2015-search', get_template_directory_uri() . '/js/hide-search.min.js', array(), '20150807', true );
+		wp_enqueue_script( 'mip-2015-collapse', get_template_directory_uri() . '/js/collapse-submenus.min.js', array( 'jquery' ), '20150812', true );
 
 	} // more_scripts_and_styles()
 
@@ -146,11 +147,37 @@ class mip_2015_Themekit {
 
 	} // add_favicons()
 
-	public function add_homepage_precontent() {
+	/**
+	 * Inserts content after the main content and before the footer.
+	 */
+	public function add_postcontent() {
 
-		get_template_part( 'template-parts/content', 'home' );
+		if ( is_front_page() ) {
 
-	} // add_homepage_precontent()
+			do_action( 'woothemes_testimonials', array( 'limit' => 1, 'order' => 'DESC', 'orderby' => 'date' ) );
+
+		}
+
+		get_template_part( 'template-parts/content', 'coalition' );
+
+	}
+
+	/**
+	 * Inserts content after the header and before the main content.
+	 */
+	public function add_precontent() {
+
+		if ( is_front_page() ) {
+
+			get_template_part( 'template-parts/content', 'homeprecontent' );
+
+		} elseif ( ! is_front_page() || ! is_home() ) {
+
+			get_template_part( 'template-parts/content', 'parentprecontent' );
+
+		}
+
+	} // add_precontent()
 
 	/**
 	 * Adds PDF as a filter for the Media Library
@@ -185,18 +212,18 @@ class mip_2015_Themekit {
 	public function background_images() {
 
 		$output = '';
-		$image 	= get_thumbnail_url( get_the_ID(), 'full' );
+		$image 	= $this->get_thumbnail_url( get_the_ID(), 'full' );
 
 		if ( ! $image ) {
 
-			$image = get_theme_mod( 'default_bg_image' );
+			$image = get_theme_mod( 'default_header' );
 
 		}
 
 		if ( ! empty( $image ) ) {
 
 			$output .= '<style>';
-			$output .= '@media screen and (min-width:768px){.site-header{background-image:url(' . $image . ');}';
+			$output .= '@media screen and (min-width:768px){.header-page{background-image:url(' . $image . ');}';
 			$output .= '</style>';
 
 		}
@@ -312,7 +339,7 @@ class mip_2015_Themekit {
 
 		$return 	= '';
 		$families 	= '';
-		$fonts[] 	= array( 'font' => 'Oxygen', 'weights' => '400,700', 'translate' => esc_html_x( 'on', 'Oxygen font: on or off', 'mip-2015' ) );
+		$fonts[] 	= array( 'font' => 'Montserrat', 'weights' => '400,700', 'translate' => esc_html_x( 'on', 'Montserrat font: on or off', 'mip-2015' ) );
 
 		foreach ( $fonts as $font ) {
 
@@ -352,6 +379,29 @@ class mip_2015_Themekit {
 		return wp_prepare_attachment_for_js( $imageID );
 
 	} // get_featured_images()
+
+	/**
+	 * Returns the attachment ID from the file URL
+	 *
+	 * @link 	https://pippinsplugins.com/retrieve-attachment-id-from-image-url/
+	 * @param 	string 		$image_url 			The URL of the image
+	 * @return 	int 							The image ID
+	 */
+	public function get_image_id( $image_url ) {
+
+		if ( empty( $image_url ) ) { return FALSE; }
+
+		global $wpdb;
+
+		$attachment = $wpdb->get_col(
+						$wpdb->prepare(
+							"SELECT ID FROM $wpdb->posts WHERE guid='%s';", $image_url
+						)
+					);
+
+        return $attachment[0];
+
+	} // get_image_id()
 
 	/**
 	 * Returns a post object of the requested post type
@@ -459,8 +509,10 @@ class mip_2015_Themekit {
 
 			// Insert theme-specific SVGs
 			case 'airport' 			: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="10 33 20 20" class="airport"><path d="M26.8 43.6h-8.6l-.9-2.7h10.4l-.9 2.7zm-1.5-6.1l-.4 1.9h-4.7l-.4-1.9h5.5zm.7 2.4l.8-3.7h-.6v-.8h-3.5v-1.7h1.5v-.6h-3.5v.6h1.5v1.7h-3.5v.8h-.6l.8 3.7h-3l1.5 4.6s.7.3 2.3.5v.6l1 .4c.1.1.2.2.2.3 0 .1-.1.3-.3.3h-.9v.4l.2.1h.1c.2 0 1-.3 2.2-.7H22.5l.9.4c.1 0 .2.1.2.2s0 .2-.1.3l-1.1 1c.1.1.1.2.1.3 0 .2-.1.4-.3.4-.1 0-.2.1-.6.1-.5 0-1.3-.1-2-.2v3.7h5.5v-7.8c1.6-.2 2.3-.5 2.3-.5l1.5-4.6c.1.2-2.9.2-2.9.2zM22.4 48.9c.2-.1.1-.3-.2-.4l1.4-1.3-.9-.4s-2 .6-2.3.7c-.1 0-.2 0-.3-.1l-2.1-.9h.7l.6.2h.1v-.1-.1l1.6-.1-1-.4-4.2-.6c-1.2-.7-2.9-1.4-2.9-1.4-.3-.1-1.3 0-1.3 0-1.4.2 1.1 1.6 1.1 1.6.5.3 1.1.5 1.6.7l.7.6-.1.1c-.1.2-.1.3 0 .4 0 0 .2.1.3.1.2.1.4.1.5.1l.5.4s0 .1-.1.1c-.1.2-.1.3 0 .4 0 0 .2.1.3.1.2.1.4.1.5.1l1.1 1 1 .4-1.9-2.5c1.2.5 1.2.5 1.9.8.9.5 3.1.7 3.4.5"/></svg>'; break;
-			case 'contact' 			: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 16 20 20" class="contact"><path d="M7.5 23.4H5.2c-.3 0-.5-.2-.5-.5s.2-.5.5-.5h2.2c.3 0 .5.2.5.5.1.3-.2.5-.4.5m-.6 2.8H5.8c-.3 0-.5-.2-.5-.5s.2-.5.5-.5H7c.3 0 .5.2.5.5-.1.2-.3.5-.6.5m1.5 2.4l12.3 2.9.6-2.6-2.1-3.1-3.7 2.2c-.1 0-.2.1-.3.1-.2 0-.3-.1-.4-.2l-2.5-3.7L9 26.1l-.6 2.5zm1-4l2.3-1.3-1.5-2.2-.8 3.5zm1.8-4l4.2 6.2 6.5-3.7-10.7-2.5zM22.5 24l-2.3 1.3 1.5 2.2.8-3.5zM7.3 28.9l2.2-9.2c0-.1.1-.3.2-.3.1-.1.3-.1.4-.1l13.4 3.2c.1 0 .3.1.3.2.1.1.1.3.1.4l-2.2 9.2c-.1.2-.3.4-.5.4h-.1L7.7 29.6c-.1 0-.3-.1-.3-.2-.2-.2-.2-.3-.1-.5m-3.2-8.7c0-.3.2-.5.5-.5H8c.3 0 .5.2.5.5s-.2.5-.5.5H4.6c-.2 0-.5-.2-.5-.5"/></svg>'; break;
+			case 'contact' 			: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="contact"><path d="M3.5 7.4H1.2c-.3 0-.5-.2-.5-.5s.2-.5.5-.5h2.2c.3 0 .5.2.5.5.1.3-.2.5-.4.5m-.6 2.8H1.8c-.3 0-.5-.2-.5-.5s.2-.5.5-.5H3c.3 0 .5.2.5.5-.1.2-.3.5-.6.5m1.5 2.4l12.3 2.9.6-2.6-2.1-3.1-3.7 2.2c-.1 0-.2.1-.3.1-.2 0-.3-.1-.4-.2L8.3 8.2 5 10.1l-.6 2.5zm1-4l2.3-1.3-1.5-2.2-.8 3.5zm1.8-4l4.2 6.2 6.5-3.7L7.2 4.6zM18.5 8l-2.3 1.3 1.5 2.2.8-3.5zM3.3 12.9l2.2-9.2c0-.1.1-.3.2-.3.1-.1.3-.1.4-.1l13.4 3.2c.1 0 .3.1.3.2.1.1.1.3.1.4l-2.2 9.2c-.1.2-.3.4-.5.4h-.1L3.7 13.6c-.1 0-.3-.1-.3-.2-.2-.2-.2-.3-.1-.5M.1 4.2c0-.3.2-.5.5-.5H4c.3 0 .5.2.5.5s-.2.5-.5.5H.6c-.2 0-.5-.2-.5-.5"/></svg>'; break;
 			case 'hub' 				: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 33 20 20" class="hub"><path d="M22.5 39.8l-1.2-1.1c.1-.3.2-.5.2-.9 0-1-.8-1.8-1.8-1.8s-1.8.8-1.8 1.8.8 1.8 1.8 1.8c.3 0 .7-.1.9-.3l1.2 1.1c.3-.2.5-.4.7-.6M27.6 39.7l1.6-2.7c.2 0 .3.1.5.1 1 0 1.8-.8 1.8-1.8s-.8-1.8-1.8-1.8-1.8.8-1.8 1.8c0 .5.2.9.5 1.3l-1.6 2.7c.3 0 .6.2.8.4M33.1 41.9c-.8 0-1.4.5-1.7 1.2l-2.2-.2c0 .3 0 .6-.1.8l2.2.2c.1.9.9 1.5 1.8 1.5 1 0 1.8-.8 1.8-1.8 0-.9-.8-1.7-1.8-1.7M27 48.9l-.5-2.2c-.3.1-.6.2-.9.2l.5 2.2c-.6.3-1 .9-1 1.6 0 1 .8 1.8 1.8 1.8s1.8-.8 1.8-1.8c0-.9-.8-1.7-1.7-1.8M21.1 43.8l-2.8.9c-.3-.5-.9-.8-1.5-.8-1 0-1.8.8-1.8 1.8s.8 1.8 1.8 1.8 1.8-.8 1.8-1.8v-.1l2.8-.9-.3-.9M28.2 42.9c0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-1.7 1.4-3.1 3.1-3.1 1.7.1 3.1 1.4 3.1 3.1"/></svg>'; break;
+			case 'limitless' 		: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" class="limitless"><path d="M8.7 9h2.7l3.4 10.7L18.4 9h2.1L24 19.7 27.5 9h2.6l-5 14.5h-2.2l-3.5-10.3-3.5 10.3h-2.2L8.7 9zM30.5 18c0-3.1 2.2-5.7 5.3-5.7 3.5 0 5.2 2.7 5.2 5.8v.7h-8c.3 1.8 1.5 2.8 3.1 2.8 1.2 0 2.1-.5 2.9-1.3l1.5 1.3c-1 1.2-2.4 2-4.4 2-3.2 0-5.6-2.3-5.6-5.6zm8-.8c-.2-1.6-1.1-2.9-2.8-2.9-1.5 0-2.6 1.2-2.8 2.9h5.6zM56.3 23.4V22c-.7.9-1.9 1.6-3.5 1.6-2.1 0-3.9-1.2-3.9-3.3 0-2.4 1.9-3.6 4.4-3.6 1.3 0 2.2.2 3 .5V17c0-1.5-.9-2.3-2.7-2.3-1.2 0-2.1.3-3.1.7l-.7-2c1.2-.5 2.4-.9 4.1-.9 3.2 0 4.8 1.7 4.8 4.6v6.4h-2.4zm0-4.6c-.6-.2-1.5-.4-2.5-.4-1.6 0-2.5.6-2.5 1.7 0 1 .9 1.6 2.1 1.6 1.6 0 2.9-.9 2.9-2.3v-.6zM61.7 12.5h2.5V15c.7-1.6 1.9-2.7 3.8-2.7v2.6h-.1c-2.2 0-3.7 1.4-3.7 4.3v4.1h-2.5V12.5zM69.2 18c0-3.1 2.2-5.7 5.3-5.7 3.5 0 5.2 2.7 5.2 5.8v.7h-8c.3 1.8 1.5 2.8 3.1 2.8 1.2 0 2.1-.5 2.9-1.3l1.5 1.3c-1 1.2-2.4 2-4.4 2-3.2 0-5.6-2.3-5.6-5.6zm8.1-.8c-.2-1.6-1.1-2.9-2.8-2.9-1.5 0-2.6 1.2-2.8 2.9h5.6zM107 11.9c1.3-.6 2.5-.9 3.6-1 1.3-.1 2.2.1 2.8.5.6.5.9 1 .8 1.6 0 .6-.4 1.2-1.1 1.8-.7.6-1.6 1-3 1.2-1.1.2-2.3.1-3.5-.2-1.2-.3-2.4-.9-3.4-1.6 1.3-1 2.5-1.7 3.8-2.3m2.4 19c-.2-.8-.5-1.5-1-2s-1.1-1-1.7-1.3c-.6-.3-1.3-.5-1.9-.6-.7-.1-1.2-.1-1.7 0s-.8.2-.9.5c-.2.2-.1.5.3.9.7.7 1.2 1.6 1.3 2.5.1.9 0 1.8-.4 2.6s-1 1.5-1.8 2-1.8.8-2.9.7c-1.1-.1-2.1-.5-2.7-1.3-.7-.8-1.1-1.8-1.3-3.1-.2-1.3-.2-2.7.1-4.3.3-1.6.9-3.3 1.7-5.1.4-.9.9-1.8 1.5-2.7.6-.9 1.3-1.7 2-2.6 1.3.7 2.8 1.2 4.3 1.5 1.5.3 3 .4 4.5.3 1.8-.1 3.3-.4 4.6-1 1.3-.6 2.2-1.3 2.9-2.2.7-.9 1.1-1.8 1.2-2.7.1-1 0-1.9-.5-2.7-.4-.8-1.2-1.5-2.2-2.1-1-.6-2.3-.9-3.8-.9-1.9-.1-3.8.2-5.5.7-1.8.5-3.4 1.3-5 2.2-.4-1.1-.5-2.2-.3-3.4.1-.7 0-1.2-.3-1.4-.3-.2-.7-.2-1.2 0s-1 .6-1.5 1.2-1 1.2-1.3 2c-.3.7-.5 1.6-.6 2.4 0 .9.2 1.7.8 2.6-1.1 1-2 2.2-2.9 3.4-.9 1.2-1.6 2.4-2.2 3.7-1.2 2.5-1.8 4.9-1.9 7.1-.1 2.2.3 4.2 1.1 5.9.8 1.6 1.9 3 3.4 3.9l-8.8 9.8-9.2-10.2h-1.5V61H79V48l5.9 6.2 5.9-6.2v13h4.7V38.8c1.1.4 2.3.6 3.5.6.6 0 1.2 0 1.7-.1V61h4.6V37.9c.6-.3 1.2-.7 1.7-1.2.9-.8 1.6-1.7 2-2.7.5-1 .6-2 .4-3.1M117.6 15.7c.2.4.4.7.9.9.4.2.9.2 1.4.2.5 0 1-.2 1.5-.4s1-.5 1.4-.9c.4-.4.7-.8.8-1.2.2-.4.1-.9 0-1.3-.2-.5-.5-.8-.9-.9-.4-.2-.9-.2-1.4-.2-.5.1-1 .2-1.5.5s-.9.6-1.3.9c-.4.4-.6.8-.8 1.2-.3.3-.3.8-.1 1.2"/><path d="M137.1 33.8c-1.1 1.4-2.1 2.4-3.1 3-1 .6-1.8.9-2.6.9-.6 0-1.1-.1-1.4-.4-.3-.3-.4-.6-.4-1 .1-.4.3-.8.7-1.2.4-.4 1.1-.8 1.9-1.1.7-.3 1.5-.4 2.3-.4 1 0 1.8 0 2.6.2m-12.3-18.2h3.7c-.4.6-.8 1.2-1.2 1.7-.4.6-.7 1-1 1.5-1.7 2.5-3 4.7-3.7 6.6 0 .1-.1.2-.1.3-.4.6-.9 1.2-1.4 1.8-.6.6-1.1 1.1-1.8 1.6-.6.5-1.2.8-1.8 1.1-.6.3-1.2.4-1.7.4-.3 0-.5-.1-.6-.3-.1-.2 0-.5.1-.8.1-.3.3-.7.5-1.1.2-.4.4-.8.7-1.3.2-.4.5-.9.8-1.4.3-.5.6-1.1.9-1.7.3-.6.6-1.1 1-1.7.3-.6.6-1.1.9-1.6.3-.5.4-.8.4-1.1 0-.3-.1-.4-.4-.5-.2-.1-.5-.1-.9-.1s-.8.1-1.2.1c-.4.1-.8.2-1.1.2-.3.1-.6.2-.8.3-.2.2-.4.4-.6.7-.2.3-.4.7-.7 1.2-.2.5-.5 1-.7 1.5-.3.5-.5 1.1-.8 1.7-.3.6-.6 1.3-.9 2-.3.7-.7 1.5-1.1 2.4-.4.9-.6 1.6-.6 2.3 0 .6.1 1.1.4 1.6.3.4.7.7 1.2.9.5.2 1.1.3 1.7.3.6 0 1.4-.2 2.4-.7.9-.5 1.9-1.1 2.9-1.8.8-.6 1.5-1.2 2.2-1.8v.5c0 1.3.2 2.2.8 2.9.6.7 1.3 1 2.3 1 .9 0 1.8-.2 2.7-.6.9-.4 1.8-.9 2.7-1.6.6-.4 1.1-.9 1.6-1.4-.1.6-.1 1.2 0 1.6-.7.2-1.4.5-2 .8-.9.5-1.6 1.1-2 1.8-.4.7-.7 1.3-.7 2s.1 1.4.5 2c.3.5.6.9 1.1 1.2v21h12v-4.6h-7.4V40.8c.6-.1 1.2-.3 1.8-.5 1.5-.5 2.7-1.4 3.7-2.5s1.8-2.4 2.6-3.7c1-.3 2-.7 3-1.2s1.9-1 2.9-1.6c.9-.6 1.8-1.3 2.6-2.1s1.6-1.7 2.2-2.7c.3-.5.5-.9.5-1.1 0-.3-.1-.5-.3-.5-.2-.1-.5 0-.8.1-.3.1-.6.4-.9.7-1.1 1.4-2.4 2.6-3.7 3.5-1.3.9-2.7 1.6-4.1 2.2.4-.8.7-1.5 1.1-2.3l1.2-2.1c.2-.4.5-.9.8-1.4.3-.5.6-1.1 1-1.7.3-.6.6-1.1 1-1.7.3-.6.6-1.1.9-1.6.3-.5.4-.8.4-1.1 0-.3-.1-.4-.4-.5-.2-.1-.5-.1-.9-.1s-.8.1-1.2.1c-.5.1-.8.2-1.1.2-.3.1-.5.2-.8.3-.2.2-.4.4-.6.7-.2.3-.4.7-.7 1.2-.3.6-.6 1.1-.8 1.7-.3.6-.6 1.2-.9 1.9-.4.7-.7 1.3-1.1 1.9-.4.6-.7 1.2-1.1 1.7-.4.5-.8.9-1.2 1.2-.4.3-.9.4-1.4.4-.3 0-.6-.1-.7-.4-.1-.3-.1-.8.1-1.5s.7-1.7 1.4-2.9c.7-1.3 1.8-2.9 3.2-4.8.3-.5.5-.8.5-1 0-.2 0-.4-.2-.5-.2-.1-.5-.2-.8-.1-.3 0-.7 0-1.2.1s-.8.2-1.1.2c-.3.1-.6.2-.8.4-.3.2-.5.4-.8.7-.3.3-.5.7-.9 1.1-.7 1-1.4 2.1-2.1 3.4-.2.3-.3.6-.5 1-.6.8-1.2 1.5-1.8 2.1-.7.7-1.3 1.2-2 1.6-.6.4-1.2.6-1.7.7-.5.1-.9.1-1.3-.2-.2-.2-.3-.6-.3-1.2s.2-1.4.4-2.2c.3-.9.6-1.8 1.1-2.8.5-1 1-1.9 1.6-2.8.5-.8 1.1-1.7 1.8-2.7.7-1 1.4-2 2-2.9h5.5c.3 0 .7-.1 1.1-.3.4-.2.8-.5 1.2-.8.4-.3.7-.7 1-1 .3-.3.5-.7.6-1 .1-.3.1-.5 0-.7-.1-.1-.4-.2-.8-.1-.6.1-1.4.3-2.6.4-1.2.1-2.4.3-3.8.5l.2-.2c.6-.6.9-1.1.8-1.3-.1-.2-.3-.3-.7-.3-.4 0-.9.2-1.6.4-.6.2-1.2.5-1.8.7-.7.3-1.6.6-2.7 1-1.1.3-2.2.6-3.2.7-.3 0-.7.1-1 .3-.3.2-.5.4-.7.7-.2.2-.2.5-.2.6.3.4.4.5.8.5M53 37.8h-4.6V61h12v-4.6H53M64.4 37.8H69V61h-4.6z"/><path d="M108.7 42.4h5.8V61h4.6V42.4h5.8v-4.6h-16.2M149.1 51.7h6.1v-4.6h-6.1v-4.7h7v-4.6h-11.7V61h12.1v-4.7h-7.4"/><g><path d="M167.4 47c-1.3-.5-2.5-1-2.6-2.3-.1-1.3.6-2.5 2.3-2.6.7 0 2.2-.1 4.7 1l.6-4.5c-3-1-4.6-1-5.8-1-3.9.2-6.6 3.2-6.6 7.1 0 3.9 3.2 5.7 6.9 7.1 1.3.5 2.3 1 2.4 2.4.1 1.3-1 2.2-2.4 2.3-1.1.1-4 0-6.6-1.8l-.6 4.9c3.2 1.6 6 1.8 7.3 1.7 4.3-.2 7-3.2 7-7 .1-3.9-3-5.9-6.6-7.3M184.1 56.5c-1.1.1-4 0-6.6-1.9l-.6 4.9c3.2 1.6 6 1.8 7.3 1.7 4.4-.2 7-3.2 7-7 0-3.7-3.1-5.8-6.7-7.1-1.3-.5-2.5-1-2.6-2.3-.1-1.3.6-2.5 2.3-2.6.7 0 2.2-.1 4.7 1l.6-4.5c-3-1-4.6-1-5.8-1-3.9.2-6.6 3.2-6.6 7.1 0 3.9 3.2 5.7 6.9 7.1 1.3.5 2.3 1 2.4 2.4.3 1.1-.9 2.1-2.3 2.2M50.6 73.8h-.8v-4.4h.9c1.4 0 2.1.5 2.1 2.2-.1 1.3-.8 2.2-2.2 2.2m.1-5h-2.3v.4l.5.1c.1 0 .1 0 .1.2v4.3c0 .1 0 .1-.1.2l-.5.1v.4h2.2c2 0 2.9-1.2 2.9-2.9 0-1.8-.9-2.8-2.8-2.8M59.2 73.7c0 .1 0 .1-.1.1h-2v-2h2.1v-.6h-2.1v-1.9h1.8c.1 0 .1 0 .1.1l.1.6h.5v-1.3h-3.9v.4l.5.1c.1 0 .1 0 .1.2v4.3c0 .1 0 .1-.1.2l-.5.1v.4h4V73h-.5v.7zM65.8 73.5c0 .1 0 .1-.1.1-.3.1-.7.2-1.1.2-1.2 0-1.9-.8-1.9-2.3 0-1.5.8-2.3 2-2.3.4 0 .7.1 1 .2.1 0 .1.1.1.1l.1.7h.5V69c-.4-.3-1-.4-1.7-.4-1.8 0-2.8 1.2-2.8 2.9s.8 2.9 2.6 2.9c.7 0 1.4-.1 1.8-.4v-1.2h-.5v.7zM70.2 72.1l.9-2.7.9 2.7h-1.8zm3.1 1.6l-1.7-4.9h-.9L69 73.7c0 .1-.1.1-.2.1l-.3.1v.4h1.8v-.4l-.6-.1.4-1.2h2.1l.4 1.2-.6.1v.4h1.9v-.4l-.3-.1c-.2 0-.3 0-.3-.1M75 70.1h.5l.1-.7c0-.1 0-.1.1-.1H77v4.4c0 .1 0 .1-.1.2l-.8.1v.4h2.6V74l-.8-.1c-.1 0-.1 0-.1-.1v-4.4H79c.1 0 .1 0 .1.1l.1.7h.5v-1.3H75v1.2zM85.2 69.2l.5.1c.1 0 .1 0 .1.2v3c0 1.1-.4 1.4-1.3 1.4s-1.3-.4-1.3-1.5v-3c0-.1 0-.1.1-.1l.5-.1v-.4h-2v.4l.5.1c.1 0 .1 0 .1.2v3.1c0 1.3.6 2 2 2 1.3 0 2.1-.6 2.1-2v-3.1c0-.1 0-.1.1-.1l.5-.1v-.4h-1.9v.3zM91.5 71.4h-.7v-2.1h.6c.9 0 1.4.2 1.4 1 0 .9-.6 1.1-1.3 1.1m1.9 2.3l-.5-1.3c-.1-.3-.2-.4-.4-.6.6-.2 1.1-.7 1.1-1.5 0-.7-.4-1.5-1.7-1.5h-2.4v.4l.5.1c.1 0 .1 0 .1.2v4.3c0 .1 0 .1-.1.2l-.5.1v.4h1.9v-.4l-.5-.1c-.1 0-.1 0-.1-.2V72h.8c.3 0 .4.1.5.3l.6 1.6h-.6v.4h2v-.4l-.5-.1s-.1 0-.2-.1M101 73.8c-.7 0-1-.5-1-1 0-.7.4-1 1-1.2l1.2 1.5c-.3.5-.7.7-1.2.7m2.5-.1l-.5-.6c.2-.3.3-.7.3-1.1 0-.1 0-.1.1-.1l.3-.1v-.4h-1c0 .4-.1.8-.3 1.3l-1-1.2c-.5-.6-.6-.8-.6-1.1 0-.3.2-.5.6-.5.2 0 .3 0 .4.1.1 0 .1.1.1.1l.1.5h.5v-1c-.2-.1-.7-.3-1.2-.3-.7 0-1.3.4-1.3 1.1 0 .3.2.7.4 1-.9.2-1.3.8-1.3 1.6 0 .9.7 1.5 1.6 1.5.7 0 1.2-.2 1.7-.8l.6.7h1V74l-.4-.1c0-.1 0-.1-.1-.2M112.9 72.4l-1.7-3.6h-1.5v.4l.5.1c.1 0 .1 0 .1.2v4.3c0 .1 0 .1-.1.2l-.5.1v.4h2.1v-.4l-.7-.1c-.1 0-.1 0-.1-.2V70l1.5 3.1h.7l1.5-3.1v3.8c0 .1 0 .1-.1.2l-.6.1v.4h2.1v-.4l-.5-.1c-.1 0-.1 0-.1-.1v-4.3c0-.1 0-.1.1-.1l.5-.1V69h-1.5l-1.7 3.4zM119.9 72.1l.9-2.7.9 2.7h-1.8zm3.1 1.6l-1.7-4.9h-.9l-1.7 4.9c0 .1-.1.1-.2.1l-.3.1v.4h1.8v-.4l-.6-.1.4-1.2h2.1l.4 1.2-.6.1v.4h1.9v-.4l-.3-.1c-.3 0-.3 0-.3-.1M129.1 73.5c0 .1 0 .1-.1.1-.3.1-.7.2-1.1.2-1.2 0-1.9-.8-1.9-2.3 0-1.5.8-2.3 2-2.3.4 0 .7.1 1 .2.1 0 .1.1.1.1l.1.7h.5V69c-.4-.3-1-.4-1.7-.4-1.8 0-2.8 1.2-2.8 2.9s.8 2.9 2.6 2.9c.7 0 1.4-.1 1.8-.4v-1.2h-.5v.7zM134.6 73.8c-1.1 0-1.9-.8-1.9-2.3 0-1.5.8-2.3 1.9-2.3 1.1 0 1.8.8 1.8 2.2.1 1.7-.7 2.4-1.8 2.4m.1-5.1c-1.8 0-2.7 1.2-2.7 2.9s.8 2.9 2.6 2.9 2.6-1.2 2.6-3c0-1.6-.8-2.8-2.5-2.8M143.2 69.2l.5.1c.1 0 .1 0 .1.2v4l-2.7-4.6h-1.5v.4l.5.1c.1 0 .1 0 .1.2v4.3c0 .1 0 .1-.1.2l-.5.1v.4h1.9v-.4l-.5-.1c-.1 0-.1 0-.1-.2v-4l2.8 4.6h.8v-4.9c0-.1 0-.1.1-.1l.5-.1V69h-1.9v.2zM154.5 73.5c0 .1 0 .1-.1.1-.3.1-.7.2-1.1.2-1.2 0-1.9-.8-1.9-2.3 0-1.5.8-2.3 2-2.3.4 0 .7.1 1 .2.1 0 .1.1.1.1l.1.7h.5V69c-.4-.3-1-.4-1.7-.4-1.8 0-2.8 1.2-2.8 2.9s.8 2.9 2.6 2.9c.7 0 1.4-.1 1.8-.4v-1.2h-.5v.7zM160 73.8c-1.1 0-1.9-.8-1.9-2.3 0-1.5.8-2.3 1.9-2.3 1.1 0 1.8.8 1.8 2.2.1 1.7-.7 2.4-1.8 2.4m.1-5.1c-1.8 0-2.7 1.2-2.7 2.9s.8 2.9 2.6 2.9 2.6-1.2 2.6-3c0-1.6-.8-2.8-2.5-2.8M168.3 69.2l.5.1c.1 0 .1 0 .1.2v3c0 1.1-.4 1.4-1.3 1.4s-1.3-.4-1.3-1.5v-3c0-.1 0-.1.1-.1l.5-.1v-.4h-2v.4l.5.1c.1 0 .1 0 .1.2v3.1c0 1.3.6 2 2 2 1.3 0 2.1-.6 2.1-2v-3.1c0-.1 0-.1.1-.1l.5-.1v-.4h-1.9v.3zM176.2 69.2l.5.1c.1 0 .1 0 .1.2v4l-2.7-4.6h-1.5v.4l.5.1c.1 0 .1 0 .1.2v4.3c0 .1 0 .1-.1.2l-.5.1v.4h1.9v-.4l-.5-.1c-.1 0-.1 0-.1-.2v-4l2.8 4.6h.8v-4.9c0-.1 0-.1.1-.1l.5-.1V69h-1.9v.2zM180.2 70.1h.5l.1-.7c0-.1 0-.1.1-.1h1.2v4.4c0 .1 0 .1-.1.2l-.8.1v.4h2.6V74l-.8-.1c-.1 0-.1 0-.1-.1v-4.4h1.2c.1 0 .1 0 .1.1l.1.7h.5v-1.3h-4.6v1.2zM189.7 68.8l-.1.4.6.1-1.2 2.3-1.2-2.3.6-.1v-.4h-1.7l-.1.4.3.1c.1 0 .1 0 .2.1l1.5 2.8v1.5c0 .1 0 .1-.1.2l-.7.1v.4h2.5V74l-.8-.1c-.1 0-.1 0-.1-.2v-1.5l1.5-2.7c0-.1.1-.1.2-.1l.3-.1v-.4h-1.7z"/></g></svg>'; break;
+
 			case 'ramp' 			: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="11 33 20 20" class="ramp"><path d="M27.3 49.2v3s0 .8.8.8h.3s.8 0 .8-.8v-3s0-.8-.8-.8H28s-.7 0-.7.8M18.9 39h4.3v.3h-4.3V39zm-.4.3h-.8v1h.3V40h5.8v.3h.3v-1h-.8V39h.3v-.3h-5.7v.3h.3l.3.3zm-5.7 9.9v3s0 .8.8.8h.4s.8 0 .8-.8v-3s0-.8-.8-.8h-.3c-.1 0-.9 0-.9.8m14.4-12.7H14.8v-1.3h12.4v1.3zm3.2-1.4V33H11.6v2.1h1.2v12.6h-.7v3.6h.4v-2.2c0-1 1-1 1-1h.7c1 0 1 1 1 1v2.2h.4v-3.6h-.7V38h12.4v9.8h-.7v3.6h.4v-2.2c0-1 1-1 1-1h.7c1 0 1 1 1 1v2.2h.4v-3.6h-.7V35.1h1z"/></svg>'; break;
 			case 'resources' 		: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-7 16 20 20" class="resources"><path d="M.6 31.9h4.8v-1.7H.6v1.7zm1.6-9.1v3.3l-1-1L0 26.3l3 3 3-3-1.2-1.2-1 1v-3.3H2.2zm-5.1-4.9h7.7V22h4.1v12.1H-2.9V17.9zm-1.7-1.7v19.6h15.2v-15L6 16.2H-4.6z"/></svg>'; break;
 			case 'road' 			: $output .= '<svg xmlns="http://www.w3.org/2000/svg" viewBox="15 24 20 20" class="road"><path d="M20 27.2l-4.7 13.6h2.4L21 27.2M30 27.2h-1l3.3 13.6h2.4M23.9 36.9L24 35h2l.1 1.9h-2.2zm.4-5.7h1.4l.1 1.9h-1.7l.2-1.9zm.3-3.9h.9l.1 1.9h-1.2l.2-1.9zm-2.6-.1l-3.4 13.7h5l.1-2h2.6l.1 2h5L28 27.2h-6z"/></svg>'; break;
@@ -517,31 +569,20 @@ class mip_2015_Themekit {
 	} // make_map_link()
 
 	/**
-	 * Converts formatted phone numbers to just numbers for tel links
+	 * Converts a phone number into a tel link
 	 *
-	 * @param 	string 		$number 			A formatted phone number
-	 * @return 	string 							The number minus characters besides numbers
+	 * @param 	string 		$number 			A phone number
+	 * @return 	mixed 							Formatted HTML telephone link
 	 */
-	public function make_number( $number ) {
+	public function make_phone_link( $number ) {
 
 		if ( empty( $number ) ) { return FALSE; }
 
-		$return = '';
+		$formatted 	= preg_replace( '/[^0-9]/', '', $number );
 
-		$return = preg_replace( '/[^0-9]/', '', $number );
+		return '<a href="tel:' . $formatted . '">' . $number . '</a>';
 
-		return $return;
-
-	} // make_number()
-
-	/**
-	 * Prints whatever in a nice, readable format
-	 */
-	public function pretty( $input ) {
-
-		echo '<pre>'; print_r( $input ); echo '</pre>';
-
-	} // pretty()
+	} // make_phone_link()
 
 	/**
 	 * Adds the name of the page or post to the body classes.
@@ -567,6 +608,48 @@ class mip_2015_Themekit {
 		return $classes;
 
 	} // page_body_classes()
+
+	/**
+	 * Changes the page title based
+	 *
+	 * @param 		mixed 		$title 			The current page title HTML
+	 * @return 		mixed 						The modified page title HTML
+	 */
+	public function precontent_title( $title ) {
+
+		$elders = get_post_ancestors( get_the_ID() );
+
+		if ( 0 < count( $elders ) ) {
+
+			$granny_id 	= $elders[ count( $elders ) - 1 ];
+			$granny  	= get_post( $granny_id );
+			$title 		= '<h1 class="page-title">' . $granny->post_title . '</h1>';
+
+		}
+
+		return $title;
+
+	} // precontent_title()
+
+	/**
+	 * Removes the "Private" text from the private pages in the breadcrumbs
+	 *
+	 * @param 	string 		$text 			The breadcrumb text
+	 * @return 	string 						The modified breadcrumb text
+	 */
+	public function remove_private( $text ) {
+
+		$check = stripos( $text, 'Private: ' );
+
+		if ( is_int( $check ) ) {
+
+			$text = str_replace( 'Private: ', '', $text );
+
+		}
+
+		return $text;
+
+	} // remove_private()
 
 	/**
 	 * Reduce the length of a string by character count
@@ -604,6 +687,28 @@ class mip_2015_Themekit {
 	} // the_svg()
 
 	/**
+	 * Unlinks breadcrumbs that are private pages
+	 *
+	 * @param 	mixed 		$output 		The HTML output for the breadcrumb
+	 * @param 	array 		$link 			Array of link info
+	 * @return 	mixed 						The modified link output
+	 */
+	public function unlink_private_pages( $output, $link ) {
+
+		$id 		= url_to_postid( $link['url'] );
+		$options 	= WPSEO_Options::get_all();
+
+		if ( $options['breadcrumbs-home'] !== $link['text'] && 0 === $id ) {
+
+			$output = '<span rel="v:child" typeof="v:Breadcrumb">' . $link['text'] . '</span>';
+
+		}
+
+		return $output;
+
+	} // unlink_private_pages()
+
+	/**
 	 * Returns an attachment by the filename
 	 *
 	 * @param  [type] $post_name [description]
@@ -629,6 +734,11 @@ class mip_2015_Themekit {
 
 	} // wp_get_attachment_by_post_name()
 
+	/**
+	 * Adds a hidden search field
+	 *
+	 * @return 		mixed 			The HTML markup for a search field
+	 */
 	public function add_hidden_search() {
 
 		?><div aria-hidden="true" class="mip-search" id="mip-search">
@@ -639,8 +749,14 @@ class mip_2015_Themekit {
 			?></div>
 		</div><?php
 
-	}
+	} // add_hidden_search()
 
+	/**
+	 * Converts the search input button to an HTML5 button element
+	 *
+	 * @param 		mixed  		$form 			The current form HTML
+	 * @return 		mixed 						The modified form HTML
+	 */
 	public function make_search_button_a_button( $form ) {
 
 		$form = '<form action="' . esc_url( home_url( '/' ) ) . '" class="search-form" method="get" role="search" >
@@ -654,7 +770,7 @@ class mip_2015_Themekit {
 
 		return $form;
 
-	} //
+	} // make_search_button_a_button()
 
 } // class
 
@@ -662,4 +778,13 @@ class mip_2015_Themekit {
  * Make an instance so its ready to be used
  */
 $mip_2015_themekit = new mip_2015_Themekit();
+
+/**
+ * Prints whatever in a nice, readable format
+ */
+function showme( $input ) {
+
+	echo '<pre>'; print_r( $input ); echo '</pre>';
+
+} // showme()
 
