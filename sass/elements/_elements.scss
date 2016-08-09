@@ -15,7 +15,6 @@ body {
 	 * Tablet menu - pushing out from left
 	 */
 	left 		: 0;
-	position 	: relative;
 	transition 	: all 0.4s ease;
 
 	@media only screen and (min-width: $bp__tablet) and (max-width: $bp__laptop) {

@@ -723,6 +723,33 @@ class mip_2015_Customize {
 		);
 		$wp_customize->get_setting( 'image_upload' )->transport = 'postMessage';
 
+
+
+		// Media Upload Field
+		// Can be used for images
+		// Returns the image ID, not a URL
+		$wp_customize->add_setting(
+			'media_upload',
+			array(
+				'default' => '',
+				'transport' => 'postMessage'
+			)
+		);
+		$wp_customize->add_control(
+			new WP_Customize_Media_Control(
+				$wp_customize,
+				'media_upload',
+				array(
+					'description' 	=> esc_html__( '', 'mip-2015' ),
+					'label' => esc_html__( 'Media Field', 'mip-2015' ),
+					'mime_type' => '',
+					'section' => 'new_section',
+					'settings' => 'media_upload'
+				)
+			)
+		);
+		$wp_customize->get_setting( 'media_upload' )->transport = 'postMessage';
+
 		*/
 
 		// Enable live preview JS

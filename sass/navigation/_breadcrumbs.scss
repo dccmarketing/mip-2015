@@ -10,13 +10,13 @@
 		.page-template-page_full-width &,
 		.search &,
 		.error404 &,
-		.single-post & {
-			padding: 0;
+		.single-post &,
+		.blog & {
+			padding-left: 2em;
 
 			.wrap-crumbs {
 				margin 		: 0 auto;
 				max-width 	: $size__max-width;
-				padding 	: 0 2em;
 			}
 		}
 	}

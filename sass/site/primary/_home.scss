@@ -1,94 +1,55 @@
 .home {
 
-	.action-calls {
-		background-color: $blue;
-		color 			: $light;
-		padding 		: 12px 0;
-		text-align 		: center;
-
-		.single-call {
-			color 			: $light;
-			display 		: block;
-			margin 			: 0 auto;
-			max-width 		: 275px;
-			text-decoration : none;
-
-			@media only screen and (min-width: $bp__action-calls1) {
-				display : inline-block;
-				width 	: 48%;
-			}
-
-			@media only screen and (min-width: $bp__headings2) {
-				max-width: none;
-			}
-
-			@media only screen and (min-width: $bp__laptop) {
-				margin 	: 0 2.5%;
-				width 	: 42%;
-			}
-
-			div {
-				display: inline-block;
-			}
-		}
-
-		.text-calltoaction {
-			font-size 		: 32px;
-			font-weight 	: 700;
-			text-transform 	: uppercase;
-		}
-
-		.icon-calltoaction {
-			height 	: 40px;
-			position: relative;
-			width 	: 38px;
-
-			svg {
-				fill 	: $light;
-			}
-		}
-
-		.button-calltoaction {
-			border 			: 1px solid $light;
-			padding 		: 2px 16px;
-			text-transform 	: uppercase;
-			transform 		: translateY(-25%);
-			transition 		: $miptrans;
-
-			&:hover {
-				background-color: $light;
-				color 			: $blue;
-			}
-		}
-
-		.resources {
-			height 	: 28px;
-			left 	: 0;
-			position: absolute;
-			top 	: 15px;
-			width 	: 38px;
-		}
-
-		.contact {
-			height 	: 40px;
-			left 	: 0;
-			position: absolute;
-			top 	: 8px;
-			width 	: 48px;
-		}
-
-		.contact-now {
-			.button-calltoaction {
-				margin-left: 8px;
-			}
-		}
-	}
-
 	.site-main {
 
 		@media only screen and (min-width: $bp__tablet) {
 			display: flex;
 		}
+
+		section{
+			width: 100%;
+
+			@media only screen and (min-width: $bp__tablet) {
+				width: 48%;
+			}
+		}
+	}
+
+	.home-testimonials {
+		min-height: 450px;
+
+		.cycle-slide {
+			left 		: 50% !important;
+			text-align 	: center;
+			top 		: 50% !important;
+			transform 	: translate(-50%, -50%);
+			width 		: 85%;
+
+			&:before,
+			&:after {
+				color 		: $blue;
+				font-size 	: 200px;
+				position 	: absolute;
+				top 		: -45px;
+			}
+
+			&:before {
+				content : "“";
+				left 	: 0;
+			}
+
+			&:after {
+				content : "”";
+				right 	: 0;
+			}
+		}
+
+		cite {
+			display 	: block;
+			margin 		: 0 auto;
+			width 		: 65%;
+		}
+
 	}
 
 	.widget_woothemes_testimonials {
@@ -148,16 +109,14 @@
 	}
 }
 
-.news-home {
+.news {
 	background-color: $light;
 	margin-bottom 	: $size__default-bot-marg;
-	width 			: 100%;
 
 	@media only screen and (min-width: $bp__tablet) {
 		border 			: 1px solid $gray;
 		margin-right	: 4%;
 		padding 		: 1em;
-		width 			: 48%;
 	}
 
 	.header-news {
@@ -194,15 +153,24 @@
 	}
 }
 
-.video-home {
-	width: 100%;
+.link-news {
+	margin-top: 1em;
+
+	a {
+		float 			: right;
+		text-decoration : none;
+		text-transform 	: uppercase;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+.video {
 
 	article {
 		margin-bottom: 0;
-	}
-
-	@media only screen and (min-width: $bp__tablet) {
-		width: 48%;
 	}
 
 	.page-content {
@@ -224,6 +192,20 @@
 		border-radius 	: 50%;
 
 		&.selected {
+			background 		: $green;
+		}
+	}
+}
+
+.soliloquy-container {
+	margin-bottom: 0 !important;
+
+	.soliloquy-pager-item a {
+		background 		: $ltgray;
+		border 			: 2px solid $light;
+		border-radius 	: 50%;
+
+		&.active {
 			background 		: $green;
 		}
 	}

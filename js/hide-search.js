@@ -1,7 +1,7 @@
 /**
- * navigation.js
+ * hide-search.js
  *
- * Handles toggling the navigation menu for small screens.
+ * Handles toggling the hidden search bar.
  */
 ( function() {
 

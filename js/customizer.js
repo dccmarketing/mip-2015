@@ -63,6 +63,30 @@
 		} );
 	} );
 
+	wp.customize( 'footer_text', function( value ) {
+		value.bind( function( to ) {
+			$( '.text-footer' ).text( to );
+		} );
+	} );
+
+	wp.customize( 'footer_owner', function( value ) {
+		value.bind( function( to ) {
+			$( '.copyright a' ).text( to );
+		} );
+	} );
+
+	wp.customize( 'footer_address', function( value ) {
+		value.bind( function( to ) {
+			$( '.address address' ).text( to );
+		} );
+	} );
+
+	wp.customize( 'footer_phone', function( value ) {
+		value.bind( function( to ) {
+			$( '.phone a' ).text( to );
+		} );
+	} );
+
 
 /*
 	// Doesn't work instantly, works after you go out of the field

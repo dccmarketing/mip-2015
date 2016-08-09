@@ -1,18 +1,20 @@
 .gallery {
-	margin-bottom: 1.5em;
+	display 		: flex;
+	flex-wrap 		: wrap;
+	margin-bottom 	: 1.5em;
 }
 
 .gallery-item {
-	@include column( 2 );
+	@include flexcol( 2, 1, 1.33 );
 
 	@media only screen and (min-width: $bp__menu-button+1) {
-		@include column( 3 );
+		@include flexcol( 3, 1, 1.33 );
 	}
 
 	@media only screen and (min-width: $bp__tablet) {
 		@for $i from 2 through 9 {
 			.gallery-columns-#{$i} & {
-				@include column( $i );
+				@include flexcol( $i, 1, 1.33 );
 			}
 		}
 	}
@@ -33,5 +35,14 @@
 	img {
 		height			: auto;
 		margin-bottom	: 0;
+	}
+}
+
+.wpa-ld {
+
+	&.aligncenter {
+		img {
+			margin: 0 auto;
+		}
 	}
 }

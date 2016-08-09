@@ -112,6 +112,16 @@ function mip_2015_widgets_init() {
 		'after_title'   => '</h2>',
 	) );
 
+	register_sidebar( array(
+		'name'          => esc_html__( 'News Sidebar', 'mip-2015' ),
+		'id'            => 'sidebar-news',
+		'description'   => '',
+		'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+		'after_widget'  => '</aside>',
+		'before_title'  => '<h2 class="widget-title">',
+		'after_title'   => '</h2>',
+	) );
+
 } // mip_2015_widgets_init()
 add_action( 'widgets_init', 'mip_2015_widgets_init' );
 
@@ -164,4 +174,7 @@ require get_template_directory() . '/inc/themekit.php';
  */
 require get_template_directory() . '/inc/menukit.php';
 
-
+/**
+ * Load Slushman Imagekit
+ */
+require get_template_directory() . '/inc/imagekit.php';

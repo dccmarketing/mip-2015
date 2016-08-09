@@ -25,14 +25,102 @@ class mip_2015_Menukit {
 	private function loader() {
 
 		add_filter( 'walker_nav_menu_start_el', array( $this, 'menu_caret' ), 10, 4 );
-		//add_filter( 'walker_nav_menu_start_el', array( $this, 'icon_before_menu_item' ), 10, 4 );
-		//add_filter( 'walker_nav_menu_start_el', array( $this, 'icon_after_menu_item' ), 10, 4 );
-		add_filter( 'walker_nav_menu_start_el', array( $this, 'icons_only_menu_item' ), 10, 4 );
-		add_filter( 'walker_nav_menu_start_el', array( $this, 'coin_flip_menu_item' ), 10, 4 );
 		add_shortcode( 'listmenu', array( $this, 'list_menu' ) );
 		add_filter( 'wp_setup_nav_menu_item', array( $this, 'add_menu_title_as_class' ), 10, 1 );
+		add_filter( 'walker_nav_menu_start_el', array( $this, 'add_icons_to_menu' ), 10, 4 );
+		add_filter( 'mip-menu-item-link-classes', array( $this, 'add_coin_to_menu_item_classes' ), 10, 2 );
+		add_filter( 'mip_menu_item_text_position', array( $this, 'get_text_position' ), 10, 3 );
+		add_filter( 'mip_menu_item_icon_name', array( $this, 'get_icon_info' ), 10, 3 );
+		add_filter( 'mip-menu-item-link-url', array( $this, 'add_utm_tags' ), 10, 3 );
 
 	} // loader()
+
+	/**
+	 * Adds the 'coin' class to the menu item classes,
+	 * if the text position is 'coin'.
+	 *
+	 * @param 		string 		$classes [description]
+	 * @param [type] $textpos [description]
+	 */
+	public function add_coin_to_menu_item_classes( $classes, $textpos ) {
+
+		if ( 'coin' !== $textpos ) { return $classes; }
+
+		$classes[] = 'coin';
+
+		return $classes;
+
+	} // add_coin_to_menu_item_classes()
+
+	/**
+	 * Add an icon the menu item
+	 *
+	 * @exits 		If $args is empty.
+	 * @exits 		If 'slushicons' is not in the classes array.
+	 * @hooked 		walker_nav_menu_start_el 		10
+	 * @link 		http://www.billerickson.net/customizing-wordpress-menus/
+	 * @param 		string 		$item_output		//
+	 * @param 		object 		$item				//
+	 * @param 		int 		$depth 				//
+	 * @param 		array 		$args 				//
+	 * @return 		string 							modified menu
+	 */
+	public function add_icons_to_menu( $item_output, $item, $depth, $args ) {
+
+		if ( empty( $args ) ) { return $item_output; }
+		if ( ! in_array( 'slushicons', $item->classes ) ) { return $item_output; }
+
+		$atts 		= $this->get_attributes( $item );
+		$icon_name 	= apply_filters( 'mip_menu_item_icon_name', '', $item, $args );
+		$icon 		= $this->get_icon( $icon_name );
+		$textpos 	= apply_filters( 'mip_menu_item_text_position', '', $item, $args );
+
+		if ( empty( $icon_name ) && empty( $textpos ) ) { return $item_output; }
+
+		$link_classes 	= apply_filters( 'mip-menu-item-link-classes', array( 'icon-menu' ), $textpos );
+		$classes 		= implode( ' ', $link_classes );
+		$url 			= apply_filters( 'mip-menu-item-link-url', $item->url, $item, $args );
+		$item_title 	= apply_filters( 'mip-menu-item-title', $item->title, $item, $args );
+
+		$output = '';
+		$output .= '<a href="' . esc_url( $url ) . '" class="' . esc_attr( $classes ) . '" ' . $atts . '>';
+
+		if ( 'right' === $textpos ) {
+
+			$output .= $icon;
+
+		}
+
+		if ( 'hide' === $textpos ) {
+
+			$output .= '<span class="screen-reader-text">' . esc_html( $item_title ) . '</span>';
+			$output .= $icon;
+
+		} elseif ( 'coin' === $textpos ) {
+
+			$output .= '<div class="front menu-icon">';
+			$output .= $icon;
+			$output .= '</div><div class="back menu-label"><span class="text">';
+			$output .= esc_html( $item_title );
+			$output .= '</span></div>';
+
+		} else {
+
+			$output .= '<span class="menu-label">' . esc_html( $item_title ) . '</span>';
+
+		}
+
+		if ( 'left' === $textpos ) {
+
+			$output .= $icon;
+
+		}
+
+		$output .= '</a>';
+
+		return $output;
+
+	} // add_icons_to_menu()
 
 	/**
 	 * Adds the Menu Item Title as a class on the menu item
@@ -54,174 +142,46 @@ class mip_2015_Menukit {
 	} // add_menu_title_as_class()
 
 	/**
-	 * Adds markup for a coin-flip style menu item
+	 * Adds the appropriate UTM tag to the menu link.
 	 *
-	 * @param 	string 		$item_output		//
-	 * @param 	object 		$item				//
-	 * @param 	int 		$depth 				//
-	 * @param 	array 		$args 				//
-	 *
-	 * @return 	string 							modified menu
+	 * @param 		string 		$url 		The current menu item link URL.
+	 * @param 		object 		$item 		The menu item object
+	 * @param 		array 		$args 		The menu arguments.
+	 * @return 		string 		$url 		The modified menu item link URL.
 	 */
-	public function coin_flip_menu_item( $item_output, $item, $depth, $args ) {
+	public function add_utm_tags( $url, $item, $args ) {
 
-		if ( 'multimodal' !== $args->theme_location ) { return $item_output; }
+		if ( empty( $item->classes ) ) { return $url; }
+		if ( ! in_array( 'utm', $item->classes ) ) { return $url; }
 
-		$atts 	= $this->get_attributes( $item );
-		$class 	= $this->get_svg_by_class( $item->classes );
+		$return = '';
 
-		if ( empty( $class ) ) { return $item_output; }
+		foreach ( $item->classes as $class ) {
 
-		$output = '';
+			if ( FALSE !== stripos( $class, 'utm-' ) ) {
 
-		$output .= '<a href="' . $item->url . '" class="coin icon-menu" ' . $atts . '>';
-		$output .= '<div class="front menu-icon">';
-		$output .= $class;
-		$output .= '</div>';
-		$output .= '<div class="back menu-label"><span class="text">';
-		$output .= $item->title;
-		$output .= '</span></div>';
-		$output .= '</a>';
+				$medium 					= substr( $class, 4 );
+				$query_args['utm_medium'] 	= urlencode( $medium );
+				break;
 
-		return $output;
+			}
 
-	} // coin_flip_menu_item()
+		}
 
-	/**
-	 * Add Down Caret to Menus with Children
-	 *
-	 * @global 		 			$dcc_2015_themekit 			Themekit class
-	 *
-	 * @param 		string 		$item_output		//
-	 * @param 		object 		$item				//
-	 * @param 		int 		$depth 				//
-	 * @param 		array 		$args 				//
-	 *
-	 * @return 		string 							modified menu
-	 */
-	public function menu_caret( $item_output, $item, $depth, $args ) {
+		$query_args['utm_source'] 	= urlencode( 'homepage' );
+		$query_args['utm_campaign'] = urlencode( 'header-icons' );
+		$return 					= add_query_arg( $query_args, $url );
 
-		if ( ! in_array( 'menu-item-has-children', $item->classes ) ) { return $item_output; }
+		return $return;
 
-		global $dcc_2015_themekit;
-
-		$atts 	= $this->get_attributes( $item );
-		$output = '';
-
-		$output .= '<a href="' . $item->url . '">';
-		$output .= $item->title;
-		$output .= '<span class="show-hide">+</span>';
-		$output .= '</a>';
-
-		return $output;
-
-	} // menu_caret()
-
-	/**
-	 * Adds an SVG icon before the menu item text
-	 *
-	 * @link 	http://www.billerickson.net/customizing-wordpress-menus/
-	 *
-	 * @param 	string 		$item_output		//
-	 * @param 	object 		$item				//
-	 * @param 	int 		$depth 				//
-	 * @param 	array 		$args 				//
-	 *
-	 * @return 	string 							modified menu
-	 */
-	public function icon_before_menu_item( $item_output, $item, $depth, $args ) {
-
-		if ( 'multimodal' !== $args->theme_location ) { return $item_output; }
-
-		$atts 	= $this->get_attributes( $item );
-		$class 	= $this->get_svg_by_class( $item->classes );
-
-		if ( empty( $class ) ) { return $item_output; }
-
-		$output = '';
-
-		$output .= '<a href="' . $item->url . '" class="icon-menu" ' . $atts . '>';
-		$output .= $class;
-		$output .= '<span class="menu-label">';
-		$output .= $item->title;
-		$output .= '</span>';
-		$output .= '</a>';
-
-		return $output;
-
-	} // icon_before_menu_item()
-
-	/**
-	 * Adds an SVG icon after the menu item text
-	 *
-	 * @link 	http://www.billerickson.net/customizing-wordpress-menus/
-	 *
-	 * @param 	string 		$item_output		//
-	 * @param 	object 		$item				//
-	 * @param 	int 		$depth 				//
-	 * @param 	array 		$args 				//
-	 *
-	 * @return 	string 							modified menu
-	 */
-	public function icon_after_menu_item( $item_output, $item, $depth, $args ) {
-
-		if ( '' !== $args->theme_location || 'subheader' !== $args->theme_location ) { return $item_output; }
-
-		$atts 	= $this->get_attributes( $item );
-		$class 	= $this->get_svg_by_class( $item->classes );
-
-		if ( empty( $class ) ) { return $item_output; }
-
-		$output = '';
-
-		$output .= '<a href="' . $item->url . '" class="icon-menu" ' . $atts . '>';
-		$output .= '<span class="menu-label">';
-		$output .= $item->title;
-		$output .= '</span>';
-		$output .= $class;
-		$output .= '</a>';
-
-		return $output;
-
-	} // icon_after_menu_item()
-
-	/**
-	 * Replaces menu item text with an SVG icon
-	 *
-	 * @link 	http://www.billerickson.net/customizing-wordpress-menus/
-	 *
-	 * @param 	string 		$item_output		//
-	 * @param 	object 		$item				//
-	 * @param 	int 		$depth 				//
-	 * @param 	array 		$args 				//
-	 *
-	 * @return 	string 							modified menu
-	 */
-	public function icons_only_menu_item( $item_output, $item, $depth, $args ) {
-
-		if ( 'social' !== $args->theme_location ) { return $item_output; }
-
-		$atts 	= $this->get_attributes( $item );
-		$class 	= $this->get_svg_by_class( $item->classes );
-
-		if ( empty( $class ) ) { return $item_output; }
-
-		$output = '';
-
-		$output .= '<a href="' . $item->url . '" class="icon-menu" ' . $atts . '>';
-		$output .= '<span class="screen-reader-text">' . $item->title . '</span>';
-		$output .= $class;
-		$output .= '</a>';
-
-		return $output;
-
-	} // icons_only_menu_item()
+	} // add_utm_tags()
 
 	/**
 	 * Returns a string of HTML attributes for the menu item
 	 *
-	 * @param 	object 		$item 			The menu item object
-	 * @return 	string 						A string of attributes
+	 * @exits 		If $item is empty.
+	 * @param 		object 		$item 			The menu item object
+	 * @return 		string 						A string of attributes
 	 */
 	public function get_attributes( $item ) {
 
@@ -251,31 +211,116 @@ class mip_2015_Menukit {
 	} // get_attributes()
 
 	/**
-	 * Gets the appropriate SVG based on a menu item class
+	 * Returns the code for the icon.
 	 *
-	 * @global 		 			$dcc_2015_themekit 			Themekit class
-	 * @param 		array 		$classes 			Array of classes to check
-	 * @return 		mixed 							SVG icon
+	 * @exits 		If $icon is empty
+	 * @exits 		if $icon is not an array.
+	 * @param 		array 		$icon 			The icon info array.
+	 * @return 		mixed 						The icon markup.
 	 */
-	public function get_svg_by_class( $classes ) {
+	private function get_icon( $icon ) {
 
-		global $mip_2015_themekit;
+		if ( empty( $icon ) || ! is_array( $icon ) ) { return; }
 
-		$output = '';
+		$return = '';
 
-		foreach ( $classes as $class ) {
+		if ( 'dashicons' === $icon['type'] ) {
 
-			if ( empty( $class ) ) { continue; }
+			$return = '<span class="dashicons dashicons-' . $icon['name'] . '"></span>';
 
-			$check = $mip_2015_themekit->get_svg( $class );
+		}
 
-			if ( ! is_null( $check ) ) { $output .= $check; break; }
+		if ( 'fontawesome' === $icon['type'] ) {
+
+			$return = '<span class="fa fa-' . $icon['name'] . '"></span>';
+
+		}
+
+		if ( 'svg' === $icon['type'] ) {
+
+			$check = mip_get_svg( $icon['name'] );
+
+			if ( ! is_null( $check ) ) {
+
+				$return = $check;
+
+			}
+
+		}
+
+		return $return;
+
+	} // get_icon()
+
+	/**
+	 * Returns an array of info about the icon.
+	 *
+	 * @exits 		If $classes is empty.
+	 * @param 		string 		$icon 			The current icon name.
+	 * @param 		object 		$item			The menu item object.
+	 * @param 		array 		$args 			The menu arguments.
+	 * @return 		array 						The type and name of the icon.
+	 */
+	public function get_icon_info( $icon, $item, $args  ) {
+
+		if ( empty( $item->classes ) ) { return; }
+
+		$return = array();
+		$checks = array( 'dic-', 'fas-', 'svg-' );
+
+		foreach ( $item->classes as $class ) {
+
+			if ( stripos( $class, $checks[0] ) !== FALSE ) {
+
+				$return['type'] = 'dashicons';
+				$return['name'] = str_replace( $checks[0], '', $class );
+				break;
+
+			}
+
+			if ( stripos( $class, $checks[1] ) !== FALSE ) {
+
+				$return['type'] = 'fontawesome';
+				$return['name'] = str_replace( $checks[1], '', $class );
+				break;
+
+			}
+
+			if ( stripos( $class, $checks[2] ) !== FALSE ) {
+
+				$return['type'] = 'svg';
+				$return['name'] = str_replace( $checks[2], '', $class );
+				break;
+
+			}
 
 		} // foreach
 
-		return $output;
+		return $return;
 
-	} // get_svg_by_class()
+	} // get_icon_info()
+
+	/**
+	 * Returns the text position from the menu item class.
+	 *
+	 * @exits 		If $classes is empty.
+	 * @param 		string 		$position 			The current text position.
+	 * @param 		object 		$item				The menu item object.
+	 * @param 		array 		$args 				The menu arguments.
+	 * @return 		string 							The text position.
+	 */
+	public function get_text_position( $position, $item, $args ) {
+
+		if ( empty( $item->classes ) ) { return; }
+
+		if ( in_array( 'no-text', $item->classes ) ) { return 'hide'; }
+		if ( in_array( 'text-left', $item->classes ) ) { return 'left'; }
+		if ( in_array( 'text-right', $item->classes ) ) { return 'right'; }
+		if ( in_array( 'text-coin', $item->classes ) ) { return 'coin'; }
+
+		return;
+
+	} // get_text_position()
 
 	/**
 	 * Returns a WordPress menu for a shortcode
@@ -325,10 +370,39 @@ class mip_2015_Menukit {
 
 	} // list_menu()
 
+	/**
+	 * Add Down Caret to Menus with Children
+	 *
+	 * @global 		 			$dcc_2015_themekit 			Themekit class
+	 *
+	 * @param 		string 		$item_output		//
+	 * @param 		object 		$item				//
+	 * @param 		int 		$depth 				//
+	 * @param 		array 		$args 				//
+	 *
+	 * @return 		string 							modified menu
+	 */
+	public function menu_caret( $item_output, $item, $depth, $args ) {
+
+		if ( ! in_array( 'menu-item-has-children', $item->classes ) ) { return $item_output; }
+
+		global $dcc_2015_themekit;
+
+		$atts 	= $this->get_attributes( $item );
+		$output = '';
+
+		$output .= '<a href="' . $item->url . '">';
+		$output .= $item->title;
+		$output .= '<span class="show-hide">+</span>';
+		$output .= '</a>';
+
+		return $output;
+
+	} // menu_caret()
+
 } // class
 
 /**
  * Make an instance so its ready to be used
  */
 $mip_2015_menukit = new mip_2015_Menukit();
-

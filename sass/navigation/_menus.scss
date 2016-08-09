@@ -65,7 +65,8 @@
 					color 		: $color__text-submenu;
 					font-size 	: 20px;
 					max-width 	: 265px;
-					padding 	: 0 1em;
+					padding 	: 0.5em;
+					//padding 	: 0 1em;
 				}
 
 				&:after {
@@ -75,17 +76,22 @@
 			}
 
 			li {
-				display: block;
+				display 	: block;
+				transition 	: $miptrans;
 
-				@media only screen and (min-width: $bp__menu-button+1) {
+				/* @media only screen and (min-width: $bp__menu-button+1) {
 					padding: 0.5em 0;
-				}
+				} */
 
 				&:last-child {
 
 					@media only screen and (max-width: $bp__menu-button) {
 						padding-bottom: 0;
 					}
+				}
+
+				&:hover {
+					background-color: $light;
 				}
 			}
 
@@ -117,7 +123,7 @@
 
 		@media only screen and (min-width: $bp__menu-button+1) {
 			display 	: inline-block;
-			padding 	: 1em 0;
+			//padding 	: 1em 0;
 			position 	: relative;
 
 			&:last-child {
@@ -156,6 +162,7 @@
 	a {
 		color 			: $color__text-menu-mobile;
 		display			: block;
+		padding 		: 1em 0;
 		text-decoration	: none;
 
 		@media only screen and (min-width: $bp__menu-button+1) {
@@ -234,7 +241,7 @@
 		}
 
 		.menu-toggle {
-			right: $size__menu_width;
+			//right: $size__menu_width;
 		}
 	}
 
