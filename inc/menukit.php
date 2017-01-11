@@ -129,12 +129,16 @@ class mip_2015_Menukit {
 	 */
 	public function add_menu_title_as_class( $menu_item ) {
 
-		$title = sanitize_title( trim( $menu_item->title ) );
+		$title = sanitize_title( $menu_item->title );
 
-		if ( ! in_array( $title, $menu_item->classes ) ) {
+		if ( empty( $menu_item->classes ) || ! is_array( $menu_item->classes ) ) {
 
+			$menu_item->classes[0] = $title;
+
+		} elseif ( ! in_array( $title, $menu_item->classes ) ) {
+			
 			$menu_item->classes[] = $title;
-
+			
 		}
 
 		return $menu_item;
